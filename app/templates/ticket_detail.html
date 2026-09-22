@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+
+    <title>Ticket #{{ ticket.id }}</title>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <div class="container mt-5">
+      <!-- ============================== -->
+      <!-- FLASH MESSAGE -->
+      <!-- ============================== -->
+
+      {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %} {% for category, message in messages %}
+
+      <div
+        class="alert alert-{{ category }} alert-dismissible fade show"
+        role="alert"
+      >
+        {{ message }}
+
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="alert"
+        ></button>
+      </div>
+
+      {% endfor %} {% endif %} {% endwith %}
+
+      <!-- ============================== -->
+      <!-- BACK -->
+      <!-- ============================== -->
+
+      <a href="{{ url_for('main.home') }}" class="btn btn-secondary mb-4">
+        Quay lại
+      </a>
+
+      <!-- ============================== -->
+      <!-- TICKET INFORMATION -->
+      <!-- ============================== -->
+
+      <h2>Ticket #{{ ticket.id }}</h2>
+
+      <p>
+        <strong>Tiêu đề:</strong>
+        {{ ticket.title }}
+      </p>
+
+      <p>
+        <strong>Mô tả:</strong>
+        {{ ticket.description }}
+      </p>
+
+      <p>
+        <strong>Người tạo:</strong>
+
+        {% if ticket.created_by %} {{ ticket.created_by.username }} {% else %} -
+        {% endif %}
+      </p>
+
+      <p>
+        <strong>Danh mục:</strong>
+
+        {% if ticket.category %} {{ ticket.category.name }} {% else %} Chưa phân
+        loại {% endif %}
+      </p>
+
+      <p>
+        <strong>Người xử lý:</strong>
+
+        {% if ticket.assigned_to %} {{ ticket.assigned_to.username }} {% else %}
+        Chưa phân công {% endif %}
+      </p>
+
+      <p>
+        <strong>Trạng thái:</strong>
+
+        {% if ticket.status == "Open" %}
+
+        <span class="badge bg-secondary"> Open </span>
+
+        {% elif ticket.status == "In Progress" %}
+
+        <span class="badge bg-primary"> In Progress </span>
+
+        {% elif ticket.status == "Resolved" %}
+
+        <span class="badge bg-success"> Resolved </span>
+
+        {% elif ticket.status == "Closed" %}
+
+        <span class="badge bg-dark"> Closed </span>
+
+        {% else %} {{ ticket.status }} {% endif %}
+      </p>
+
+      <!-- ============================== -->
+      <!-- TIMESTAMPS -->
+      <!-- ============================== -->
+
+      <p>
+        <strong>Ngày tạo:</strong>
+
+        {% if ticket.created_at %} {{ ticket.created_at.strftime("%d/%m/%Y
+        %H:%M") }} {% else %} - {% endif %}
+      </p>
+
+      <p>
+        <strong>Cập nhật gần nhất:</strong>
+
+        {% if ticket.updated_at %} {{ ticket.updated_at.strftime("%d/%m/%Y
+        %H:%M") }} {% else %} - {% endif %}
+      </p>
+
+      <p>
+        <strong>Thời điểm xử lý xong:</strong>
+
+        {% if ticket.resolved_at %} {{ ticket.resolved_at.strftime("%d/%m/%Y
+        %H:%M") }} {% else %} - {% endif %}
+      </p>
+
+      <p>
+        <strong>Thời điểm đóng:</strong>
+
+        {% if ticket.closed_at %} {{ ticket.closed_at.strftime("%d/%m/%Y %H:%M")
+        }} {% else %} - {% endif %}
+      </p>
+
+      <!-- ============================== -->
+      <!-- ADMIN ASSIGNMENT -->
+      <!-- ============================== -->
+
+      {% if current_user.role == "Admin" %} {% if ticket.status == "Open" %}
+
+      <hr />
+
+      <h4>Phân công Ticket</h4>
+
+      <form
+        method="POST"
+        action="{{ url_for(
+                'tickets.assign_ticket',
+                ticket_id=ticket.id
+            ) }}"
+      >
+        <div class="mb-3">
+          <select name="assigned_to_id" class="form-select" required>
+            <option value="">-- Chọn nhân viên --</option>
+
+            {% for user in support_users %}
+
+            <option
+              value="{{ user.id }}"
+              {%
+              if
+              ticket.assigned_to_id=="user.id"
+              %}
+              selected
+              {%
+              endif
+              %}
+            >
+              {{ user.username }} - {{ user.role }}
+            </option>
+
+            {% endfor %}
+          </select>
+        </div>
+
+        <button type="submit" class="btn btn-warning">Phân công</button>
+      </form>
+
+      {% endif %} {% endif %}
+
+      <!-- ============================== -->
+      <!-- IT / ADMIN WORKFLOW -->
+      <!-- ============================== -->
+
+      {% if current_user.role in ["Admin", "IT Support"] %}
+
+      <hr />
+
+      <h4>Xử lý Ticket</h4>
+
+      {% if ticket.status == "Open" %}
+
+      <div class="alert alert-info">
+        Ticket đang chờ nhân viên IT tiếp nhận xử lý.
+      </div>
+
+      {% if ticket.assigned_to_id is none or ticket.assigned_to_id ==
+      current_user.id %}
+
+      <form
+        method="POST"
+        action="{{ url_for(
+                    'tickets.accept_ticket',
+                    ticket_id=ticket.id
+                ) }}"
+      >
+        <button type="submit" class="btn btn-primary">Tiếp nhận xử lý</button>
+      </form>
+
+      {% else %}
+
+      <div class="alert alert-warning">
+        Ticket này đã được phân công cho
+
+        <strong> {{ ticket.assigned_to.username }} </strong>.
+      </div>
+
+      {% endif %} {% elif ticket.status == "In Progress" %} {% if
+      ticket.resolution_confirmed == false %}
+
+      <div class="alert alert-warning">
+        Người dùng báo sự cố vẫn chưa được khắc phục. Vui lòng tiếp tục xử lý.
+      </div>
+
+      {% endif %} {% if current_user.role == "Admin" or ticket.assigned_to_id ==
+      current_user.id %}
+
+      <!-- ============================== -->
+      <!-- CHUYỂN PHIẾU -->
+      <!-- ============================== -->
+
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title">Chuyển phiếu xử lý</h5>
+
+          <p class="text-muted">
+            Nếu bạn không đủ khả năng xử lý, hãy chuyển Ticket cho IT Support
+            khác hoặc Admin.
+          </p>
+
+          <form
+            method="POST"
+            action="{{ url_for(
+                        'tickets.transfer_ticket',
+                        ticket_id=ticket.id
+                    ) }}"
+          >
+            <div class="mb-3">
+              <label class="form-label"> Chuyển cho </label>
+
+              <select name="assigned_to_id" class="form-select" required>
+                <option value="">-- Chọn người nhận --</option>
+
+                {% for user in support_users %} {% if user.id !=
+                ticket.assigned_to_id %}
+
+                <option value="{{ user.id }}">
+                  {{ user.username }} - {{ user.role }}
+                </option>
+
+                {% endif %} {% endfor %}
+              </select>
+            </div>
+
+            <button type="submit" class="btn btn-warning">Chuyển phiếu</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- ============================== -->
+      <!-- XỬ LÝ XONG -->
+      <!-- ============================== -->
+
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Hoàn tất xử lý</h5>
+
+          <p class="text-muted">
+            Bước tiếp theo chúng ta sẽ bổ sung phần nhập phương án xử lý tại
+            đây.
+          </p>
+        </div>
+      </div>
+
+      {% else %}
+
+      <div class="alert alert-info">
+        Ticket hiện đang được xử lý bởi
+
+        <strong> {{ ticket.assigned_to.username }} </strong>.
+      </div>
+
+      {% endif %} {% elif ticket.status == "Closed" %}
+
+      <div class="alert alert-secondary">Ticket này đã được đóng.</div>
+
+      {% endif %} {% endif %}
+
+      <!-- ============================== -->
+      <!-- USER CONFIRMATION -->
+      <!-- ============================== -->
+
+      {% if current_user.role == "User" and ticket.status == "Resolved" %}
+
+      <hr />
+
+      {% if ticket.resolution_confirmed is none %}
+
+      <div class="alert alert-info">
+        <h5>IT Support đã xử lý sự cố</h5>
+
+        <p>
+          Vui lòng kiểm tra lại và xác nhận sự cố đã được khắc phục hay chưa.
+        </p>
+
+        <form
+          method="POST"
+          action="{{ url_for(
+                        'tickets.confirm_resolution',
+                        ticket_id=ticket.id
+                    ) }}"
+        >
+          <button
+            type="submit"
+            name="confirmation"
+            value="fixed"
+            class="btn btn-success"
+          >
+            Đã khắc phục
+          </button>
+
+          <button
+            type="submit"
+            name="confirmation"
+            value="not_fixed"
+            class="btn btn-danger"
+          >
+            Vẫn còn lỗi
+          </button>
+        </form>
+      </div>
+
+      {% elif ticket.resolution_confirmed == true %}
+
+      <div class="alert alert-success">
+        Bạn đã xác nhận sự cố được khắc phục. Ticket đang chờ IT Support đóng.
+      </div>
+
+      {% endif %} {% endif %}
+
+      <!-- ============================== -->
+      <!-- COMMENTS -->
+      <!-- ============================== -->
+
+      <hr />
+
+      <h4>Bình luận</h4>
+
+      {% if ticket.comments %} {% for comment in ticket.comments %}
+
+      <div class="border rounded p-3 mb-3">
+        <div class="mb-2">
+          <strong> {{ comment.user.username }} </strong>
+
+          <span class="text-muted"> - {{ comment.user.role }} </span>
+        </div>
+
+        <p class="mb-1">{{ comment.content }}</p>
+
+        <small class="text-muted">
+          {{ comment.created_at.strftime( "%d/%m/%Y %H:%M" ) }}
+        </small>
+      </div>
+
+      {% endfor %} {% else %}
+
+      <p class="text-muted">Chưa có bình luận.</p>
+
+      {% endif %} {% if ticket.status != "Closed" %}
+
+      <form
+        method="POST"
+        action="{{ url_for(
+                'tickets.add_comment',
+                ticket_id=ticket.id
+            ) }}"
+      >
+        <div class="mb-3">
+          <label class="form-label"> Thêm bình luận </label>
+
+          <textarea
+            name="content"
+            class="form-control"
+            rows="3"
+            required
+          ></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Gửi bình luận</button>
+      </form>
+
+      {% else %}
+
+      <div class="alert alert-secondary">
+        Ticket đã đóng nên không thể thêm bình luận mới.
+      </div>
+
+      {% endif %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
