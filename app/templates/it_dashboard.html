@@ -194,19 +194,23 @@
             </a>
           </li>
 
+          {% if current_user.role == "Admin" %}
+
           <li class="nav-item">
             <a
               class="nav-link {% if current_tab == 'closed' %} active {% endif %}"
               href="{{ url_for(
-                        'tickets.it_dashboard',
-                        tab='closed'
-                    ) }}"
+                'tickets.it_dashboard',
+                tab='closed'
+            ) }}"
             >
               Đã đóng
 
               <span class="badge bg-dark"> {{ count_closed }} </span>
             </a>
           </li>
+
+          {% endif %}
 
           <li class="nav-item">
             <a

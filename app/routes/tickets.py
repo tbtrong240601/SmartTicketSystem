@@ -133,14 +133,12 @@ def update_status(ticket_id):
         "Closed": [],
     }
 
-    # Kiểm tra trạng thái hợp lệ
     if new_status not in allowed_transitions.get(current_status, []):
 
         flash(f"Không thể chuyển từ " f"{current_status} sang {new_status}.", "danger")
 
         return redirect(url_for("tickets.ticket_detail", ticket_id=ticket.id))
 
-    # IT báo đã xử lý xong
     if new_status == "Resolved":
 
         ticket.status = "Resolved"
@@ -156,7 +154,6 @@ def update_status(ticket_id):
 
         return redirect(url_for("tickets.ticket_detail", ticket_id=ticket.id))
 
-    # IT muốn đóng Ticket
     if new_status == "Closed":
 
         if ticket.resolution_confirmed is not True:
@@ -169,10 +166,6 @@ def update_status(ticket_id):
         ticket.closed_at = datetime.utcnow()
 
         db.session.commit()
-
-        flash("Ticket đã được đóng.", "success")
-
-        return redirect(url_for("tickets.ticket_detail", ticket_id=ticket.id))
 
     # Open → In Progress
     ticket.status = new_status
@@ -339,23 +332,15 @@ def it_dashboard():
 
     category_id = request.args.get("category_id", "").strip()
 
-    # =========================
-    # TICKET IT ĐƯỢC PHÉP THẤY
-    # =========================
-
     if current_user.role == "Admin":
 
         base_query = Ticket.query
 
     else:
-
         base_query = Ticket.query.filter(
-            or_(Ticket.status == "Open", Ticket.assigned_to_id == current_user.id)
+            or_(Ticket.status == "Open", Ticket.assigned_to_id == current_user.id),
+            Ticket.status != "Closed",
         )
-
-    # =========================
-    # ĐẾM TICKET CHO CÁC TAB
-    # =========================
 
     count_unaccepted = base_query.filter(Ticket.status == "Open").count()
 
@@ -370,10 +355,6 @@ def it_dashboard():
     ).count()
 
     count_closed = base_query.filter(Ticket.status == "Closed").count()
-
-    # =========================
-    # QUERY THEO TAB
-    # =========================
 
     query = base_query
 
@@ -405,17 +386,9 @@ def it_dashboard():
 
         pass
 
-    # =========================
-    # SEARCH
-    # =========================
-
     if keyword:
 
         query = query.filter(Ticket.title.ilike(f"%{keyword}%"))
-
-    # =========================
-    # CATEGORY FILTER
-    # =========================
 
     if category_id:
 
