@@ -49,8 +49,16 @@
 
         <strong> {{ current_user.role }} </strong>
 
-        |
+        | {% if current_user.role in ["IT Support", "Admin"] %}
 
+        <a
+          href="{{ url_for('tickets.it_dashboard') }}"
+          class="btn btn-primary mb-3"
+        >
+          IT Support Dashboard
+        </a>
+
+        {% endif %}
         <a href="{{ url_for('auth.logout') }}"> Đăng xuất </a>
       </div>
 

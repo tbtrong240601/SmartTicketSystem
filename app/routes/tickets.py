@@ -3,6 +3,7 @@ from datetime import datetime
 from flask import Blueprint, render_template, request, redirect, url_for, abort, flash
 from flask_login import login_required, current_user
 
+from sqlalchemy import or_
 from app.extensions import db
 from app.models import Ticket, Category, User, Comment
 from app.utils.decorators import roles_required
@@ -50,7 +51,6 @@ def ticket_detail(ticket_id):
         abort(403)
 
     support_users = User.query.filter(User.role.in_(["IT Support", "Admin"])).all()
-    
 
     return render_template(
         "ticket_detail.html", ticket=ticket, support_users=support_users
@@ -115,20 +115,12 @@ def add_comment(ticket_id):
 def update_status(ticket_id):
 
     ticket = db.get_or_404(Ticket, ticket_id)
-    
-    if (current_user.role == "IT Support"and ticket.assigned_to_id != current_user.id):
 
-        flash(
-            "Bạn không phải người đang phụ trách Ticket này.",
-            "danger"
-        )
+    if current_user.role == "IT Support" and ticket.assigned_to_id != current_user.id:
 
-        return redirect(
-            url_for(
-                "tickets.ticket_detail",
-                ticket_id=ticket.id
-            )
-        )
+        flash("Bạn không phải người đang phụ trách Ticket này.", "danger")
+
+        return redirect(url_for("tickets.ticket_detail", ticket_id=ticket.id))
 
     new_status = request.form.get("status")
 
@@ -291,7 +283,6 @@ def transfer_ticket(ticket_id):
 
         return redirect(url_for("tickets.ticket_detail", ticket_id=ticket.id))
 
-
     if current_user.role == "IT Support" and ticket.assigned_to_id != current_user.id:
 
         flash("Bạn không phải người đang phụ trách Ticket này.", "danger")
@@ -335,3 +326,115 @@ def transfer_ticket(ticket_id):
     flash(f"Đã chuyển Ticket cho {new_assignee.username}.", "success")
 
     return redirect(url_for("tickets.ticket_detail", ticket_id=ticket.id))
+
+
+@ticket_bp.route("/it/dashboard")
+@login_required
+@roles_required("IT Support", "Admin")
+def it_dashboard():
+
+    tab = request.args.get("tab", "unaccepted")
+
+    keyword = request.args.get("keyword", "").strip()
+
+    category_id = request.args.get("category_id", "").strip()
+
+    # =========================
+    # TICKET IT ĐƯỢC PHÉP THẤY
+    # =========================
+
+    if current_user.role == "Admin":
+
+        base_query = Ticket.query
+
+    else:
+
+        base_query = Ticket.query.filter(
+            or_(Ticket.status == "Open", Ticket.assigned_to_id == current_user.id)
+        )
+
+    # =========================
+    # ĐẾM TICKET CHO CÁC TAB
+    # =========================
+
+    count_unaccepted = base_query.filter(Ticket.status == "Open").count()
+
+    count_in_progress = base_query.filter(Ticket.status == "In Progress").count()
+
+    count_waiting_user = base_query.filter(
+        Ticket.status == "Resolved", Ticket.resolution_confirmed.is_(None)
+    ).count()
+
+    count_done = base_query.filter(
+        Ticket.status == "Resolved", Ticket.resolution_confirmed.is_(True)
+    ).count()
+
+    count_closed = base_query.filter(Ticket.status == "Closed").count()
+
+    # =========================
+    # QUERY THEO TAB
+    # =========================
+
+    query = base_query
+
+    if tab == "unaccepted":
+
+        query = query.filter(Ticket.status == "Open")
+
+    elif tab == "in_progress":
+
+        query = query.filter(Ticket.status == "In Progress")
+
+    elif tab == "waiting_user":
+
+        query = query.filter(
+            Ticket.status == "Resolved", Ticket.resolution_confirmed.is_(None)
+        )
+
+    elif tab == "done":
+
+        query = query.filter(
+            Ticket.status == "Resolved", Ticket.resolution_confirmed.is_(True)
+        )
+
+    elif tab == "closed":
+
+        query = query.filter(Ticket.status == "Closed")
+
+    elif tab == "all":
+
+        pass
+
+    # =========================
+    # SEARCH
+    # =========================
+
+    if keyword:
+
+        query = query.filter(Ticket.title.ilike(f"%{keyword}%"))
+
+    # =========================
+    # CATEGORY FILTER
+    # =========================
+
+    if category_id:
+
+        query = query.filter(Ticket.category_id == int(category_id))
+
+    tickets = query.order_by(Ticket.updated_at.desc()).all()
+
+    categories = Category.query.order_by(Category.name.asc()).all()
+
+    return render_template(
+        "it_dashboard.html",
+        tickets=tickets,
+        categories=categories,
+        current_tab=tab,
+        keyword=keyword,
+        selected_category_id=category_id,
+        count_unaccepted=count_unaccepted,
+        count_in_progress=count_in_progress,
+        count_waiting_user=count_waiting_user,
+        count_done=count_done,
+        count_closed=count_closed,
+    )
