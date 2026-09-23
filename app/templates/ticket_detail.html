@@ -184,11 +184,19 @@
       <!-- IT / ADMIN WORKFLOW -->
       <!-- ============================== -->
 
+      <!-- ============================== -->
+      <!-- IT / ADMIN WORKFLOW -->
+      <!-- ============================== -->
+
       {% if current_user.role in ["Admin", "IT Support"] %}
 
       <hr />
 
       <h4>Xử lý Ticket</h4>
+
+      <!-- ============================== -->
+      <!-- OPEN -->
+      <!-- ============================== -->
 
       {% if ticket.status == "Open" %}
 
@@ -212,12 +220,18 @@
       {% else %}
 
       <div class="alert alert-warning">
-        Ticket này đã được phân công cho
-
-        <strong> {{ ticket.assigned_to.username }} </strong>.
+        Ticket này đã được phân công cho {% if ticket.assigned_to %}
+        <strong> {{ ticket.assigned_to.username }} </strong>
+        {% endif %}
       </div>
 
-      {% endif %} {% elif ticket.status == "In Progress" %} {% if
+      {% endif %}
+
+      <!-- ============================== -->
+      <!-- IN PROGRESS -->
+      <!-- ============================== -->
+
+      {% elif ticket.status == "In Progress" %} {% if
       ticket.resolution_confirmed == false %}
 
       <div class="alert alert-warning">
@@ -243,9 +257,9 @@
           <form
             method="POST"
             action="{{ url_for(
-                        'tickets.transfer_ticket',
-                        ticket_id=ticket.id
-                    ) }}"
+                            'tickets.transfer_ticket',
+                            ticket_id=ticket.id
+                        ) }}"
           >
             <div class="mb-3">
               <label class="form-label"> Chuyển cho </label>
@@ -270,29 +284,117 @@
       </div>
 
       <!-- ============================== -->
-      <!-- XỬ LÝ XONG -->
+      <!-- PHƯƠNG ÁN XỬ LÝ -->
       <!-- ============================== -->
 
       <div class="card">
         <div class="card-body">
-          <h5 class="card-title">Hoàn tất xử lý</h5>
+          <h5 class="card-title">Phương án xử lý</h5>
 
           <p class="text-muted">
-            Bước tiếp theo chúng ta sẽ bổ sung phần nhập phương án xử lý tại
-            đây.
+            Nhập kết quả hoặc phương án xử lý trước khi gửi cho người dùng xác
+            nhận.
           </p>
+
+          <form
+            method="POST"
+            action="{{ url_for(
+                            'tickets.resolve_ticket',
+                            ticket_id=ticket.id
+                        ) }}"
+          >
+            <div class="mb-3">
+              <label class="form-label"> Nội dung xử lý </label>
+
+              <textarea
+                name="resolution_note"
+                class="form-control"
+                rows="5"
+                placeholder="Nhập phương án xử lý..."
+                required
+              >
+{{ ticket.resolution_note or "" }}</textarea
+              >
+            </div>
+
+            <button type="submit" class="btn btn-success">
+              Hoàn tất xử lý
+            </button>
+          </form>
         </div>
       </div>
 
       {% else %}
 
       <div class="alert alert-info">
-        Ticket hiện đang được xử lý bởi
+        Ticket hiện đang được xử lý bởi {% if ticket.assigned_to %}
 
-        <strong> {{ ticket.assigned_to.username }} </strong>.
+        <strong> {{ ticket.assigned_to.username }} </strong>
+
+        {% endif %}
       </div>
 
-      {% endif %} {% elif ticket.status == "Closed" %}
+      {% endif %}
+
+      <!-- ============================== -->
+      <!-- RESOLVED -->
+      <!-- ============================== -->
+
+      {% elif ticket.status == "Resolved" %} {% if ticket.resolution_confirmed
+      is none %}
+
+      <div class="alert alert-warning">
+        <strong> Đang chờ người dùng xác nhận. </strong>
+
+        <br />
+
+        Kết quả xử lý đã được gửi cho người dùng.
+      </div>
+
+      {% if ticket.resolution_note %}
+
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Phương án đã gửi</h5>
+
+          <p class="mb-0">{{ ticket.resolution_note }}</p>
+        </div>
+      </div>
+
+      {% endif %} {% elif ticket.resolution_confirmed == true %}
+
+      <div class="alert alert-success">
+        Người dùng đã xác nhận sự cố được khắc phục. Ticket có thể được đóng.
+      </div>
+
+      {% if current_user.role == "Admin" or ticket.assigned_to_id ==
+      current_user.id %}
+
+      <form
+        method="POST"
+        action="{{ url_for(
+                        'tickets.update_status',
+                        ticket_id=ticket.id
+                    ) }}"
+      >
+        <input type="hidden" name="status" value="Closed" />
+
+        <button type="submit" class="btn btn-dark">Đóng Ticket</button>
+      </form>
+
+      {% endif %} {% elif ticket.resolution_confirmed == false %}
+
+      <div class="alert alert-warning">
+        Người dùng cho biết sự cố vẫn chưa được khắc phục.
+      </div>
+
+      {% endif %}
+
+      <!-- ============================== -->
+      <!-- CLOSED -->
+      <!-- ============================== -->
+
+      {% elif ticket.status == "Closed" %}
 
       <div class="alert alert-secondary">Ticket này đã được đóng.</div>
 
@@ -309,6 +411,17 @@
       {% if ticket.resolution_confirmed is none %}
 
       <div class="alert alert-info">
+        {% if ticket.resolution_note %}
+
+        <div class="card mb-3">
+          <div class="card-body">
+            <h6 class="card-title">Phương án xử lý từ IT Support</h6>
+
+            <p class="mb-0">{{ ticket.resolution_note }}</p>
+          </div>
+        </div>
+
+        {% endif %}
         <h5>IT Support đã xử lý sự cố</h5>
 
         <p>

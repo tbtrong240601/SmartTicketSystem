@@ -1,422 +1,729 @@
-<!doctype html>
-<html lang="vi">
-  <head>
-    <meta charset="UTF-8" />
+{% extends "base.html" %}
 
-    <title>IT Support Dashboard</title>
 
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
+{% block title %}
+    IT Support Dashboard - SmartTicket
+{% endblock %}
 
-    <style>
-      body {
-        background-color: #f5f6f8;
-      }
 
-      .dashboard-header {
-        background: white;
-        border-bottom: 1px solid #dee2e6;
-        padding: 18px 25px;
-      }
+{% block header_title %}
+    IT Support Dashboard
+{% endblock %}
 
-      .dashboard-content {
-        padding: 25px;
-      }
 
-      .ticket-tabs {
-        background: white;
-        border: 1px solid #dee2e6;
-        border-radius: 8px;
-        padding: 10px 15px 0 15px;
-      }
+{% block content %}
 
-      .ticket-tabs .nav-link {
-        color: #495057;
-        font-weight: 500;
-      }
 
-      .ticket-tabs .nav-link.active {
-        color: #0d6efd;
-        font-weight: 600;
-      }
+<!-- ============================== -->
+<!-- PAGE HEADER -->
+<!-- ============================== -->
 
-      .filter-box {
-        background: white;
-        border: 1px solid #dee2e6;
-        border-radius: 8px;
-        padding: 20px;
-      }
+<div class="mb-4">
 
-      .ticket-table-box {
-        background: white;
-        border: 1px solid #dee2e6;
-        border-radius: 8px;
-        overflow: hidden;
-      }
+    <h1 class="page-title">
+        Quản lý Ticket
+    </h1>
 
-      .ticket-table-box table {
-        margin-bottom: 0;
-      }
+    <p class="page-subtitle">
+        Theo dõi, tiếp nhận và xử lý các yêu cầu hỗ trợ.
+    </p>
 
-      .ticket-title {
-        font-weight: 500;
-      }
+</div>
 
-      .action-button {
-        min-width: 80px;
-      }
-    </style>
-  </head>
 
-  <body>
-    <!-- ============================== -->
-    <!-- HEADER -->
-    <!-- ============================== -->
+<!-- ============================== -->
+<!-- STATISTICS -->
+<!-- ============================== -->
 
-    <div class="dashboard-header">
-      <div class="d-flex justify-content-between align-items-center">
-        <div>
-          <h4 class="mb-1">IT Support Dashboard</h4>
+<div class="row g-3 mb-4">
 
-          <small class="text-muted"> Quản lý và xử lý yêu cầu hỗ trợ </small>
+    <!-- CHƯA TIẾP NHẬN -->
+
+    <div class="col-xl-3 col-md-6">
+
+        <div class="stat-card">
+
+            <div class="stat-label">
+                Chưa tiếp nhận
+            </div>
+
+            <div class="stat-value">
+                {{ count_unaccepted }}
+            </div>
+
+            <a
+                href="{{ url_for(
+                    'tickets.it_dashboard',
+                    tab='unaccepted'
+                ) }}"
+                class="text-decoration-none small"
+            >
+                Xem Ticket →
+            </a>
+
         </div>
 
-        <div>
-          Xin chào,
-
-          <strong> {{ current_user.username }} </strong>
-
-          <span class="text-muted mx-2"> | </span>
-
-          <a
-            href="{{ url_for('main.home') }}"
-            class="btn btn-outline-secondary btn-sm"
-          >
-            Trang chủ
-          </a>
-
-          <a
-            href="{{ url_for('auth.logout') }}"
-            class="btn btn-outline-danger btn-sm"
-          >
-            Đăng xuất
-          </a>
-        </div>
-      </div>
     </div>
 
-    <div class="dashboard-content">
-      <!-- ============================== -->
-      <!-- FLASH MESSAGE -->
-      <!-- ============================== -->
 
-      {% with messages = get_flashed_messages(with_categories=true) %} {% if
-      messages %} {% for category, message in messages %}
+    <!-- ĐANG XỬ LÝ -->
 
-      <div
-        class="alert alert-{{ category }} alert-dismissible fade show"
-        role="alert"
-      >
-        {{ message }}
+    <div class="col-xl-3 col-md-6">
 
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="alert"
-        ></button>
-      </div>
+        <div class="stat-card">
 
-      {% endfor %} {% endif %} {% endwith %}
-
-      <!-- ============================== -->
-      <!-- STATUS TABS -->
-      <!-- ============================== -->
-
-      <div class="ticket-tabs mb-4">
-        <ul class="nav nav-tabs">
-          <li class="nav-item">
-            <a
-              class="nav-link {% if current_tab == 'unaccepted' %} active {% endif %}"
-              href="{{ url_for(
-                        'tickets.it_dashboard',
-                        tab='unaccepted'
-                    ) }}"
-            >
-              Chưa tiếp nhận
-
-              <span class="badge bg-secondary"> {{ count_unaccepted }} </span>
-            </a>
-          </li>
-
-          <li class="nav-item">
-            <a
-              class="nav-link {% if current_tab == 'in_progress' %} active {% endif %}"
-              href="{{ url_for(
-                        'tickets.it_dashboard',
-                        tab='in_progress'
-                    ) }}"
-            >
-              Đang xử lý
-
-              <span class="badge bg-primary"> {{ count_in_progress }} </span>
-            </a>
-          </li>
-
-          <li class="nav-item">
-            <a
-              class="nav-link {% if current_tab == 'waiting_user' %} active {% endif %}"
-              href="{{ url_for(
-                        'tickets.it_dashboard',
-                        tab='waiting_user'
-                    ) }}"
-            >
-              Chờ phản hồi User
-
-              <span class="badge bg-warning text-dark">
-                {{ count_waiting_user }}
-              </span>
-            </a>
-          </li>
-
-          <li class="nav-item">
-            <a
-              class="nav-link {% if current_tab == 'done' %} active {% endif %}"
-              href="{{ url_for(
-                        'tickets.it_dashboard',
-                        tab='done'
-                    ) }}"
-            >
-              Đã xử lý
-
-              <span class="badge bg-success"> {{ count_done }} </span>
-            </a>
-          </li>
-
-          {% if current_user.role == "Admin" %}
-
-          <li class="nav-item">
-            <a
-              class="nav-link {% if current_tab == 'closed' %} active {% endif %}"
-              href="{{ url_for(
-                'tickets.it_dashboard',
-                tab='closed'
-            ) }}"
-            >
-              Đã đóng
-
-              <span class="badge bg-dark"> {{ count_closed }} </span>
-            </a>
-          </li>
-
-          {% endif %}
-
-          <li class="nav-item">
-            <a
-              class="nav-link {% if current_tab == 'all' %} active {% endif %}"
-              href="{{ url_for(
-                        'tickets.it_dashboard',
-                        tab='all'
-                    ) }}"
-            >
-              Tất cả
-            </a>
-          </li>
-        </ul>
-      </div>
-
-      <!-- ============================== -->
-      <!-- SEARCH / FILTER -->
-      <!-- ============================== -->
-
-      <div class="filter-box mb-4">
-        <form method="GET" action="{{ url_for('tickets.it_dashboard') }}">
-          <input type="hidden" name="tab" value="{{ current_tab }}" />
-
-          <div class="row g-3 align-items-end">
-            <div class="col-md-5">
-              <label class="form-label"> Tìm Ticket </label>
-
-              <input
-                type="text"
-                name="keyword"
-                class="form-control"
-                placeholder="Nhập tiêu đề Ticket..."
-                value="{{ keyword }}"
-              />
+            <div class="stat-label">
+                Đang xử lý
             </div>
 
-            <div class="col-md-4">
-              <label class="form-label"> Danh mục </label>
-
-              <select name="category_id" class="form-select">
-                <option value="">Tất cả danh mục</option>
-
-                {% for category in categories %}
-
-                <option
-                  value="{{ category.id }}"
-                  {%
-                  if
-                  selected_category_id=="category.id|string"
-                  %}
-                  selected
-                  {%
-                  endif
-                  %}
-                >
-                  {{ category.name }}
-                </option>
-
-                {% endfor %}
-              </select>
+            <div class="stat-value">
+                {{ count_in_progress }}
             </div>
 
-            <div class="col-md-3">
-              <button type="submit" class="btn btn-primary">Tra cứu</button>
-
-              <a
+            <a
                 href="{{ url_for(
+                    'tickets.it_dashboard',
+                    tab='in_progress'
+                ) }}"
+                class="text-decoration-none small"
+            >
+                Xem Ticket →
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- CHỜ USER -->
+
+    <div class="col-xl-3 col-md-6">
+
+        <div class="stat-card">
+
+            <div class="stat-label">
+                Chờ User phản hồi
+            </div>
+
+            <div class="stat-value">
+                {{ count_waiting_user }}
+            </div>
+
+            <a
+                href="{{ url_for(
+                    'tickets.it_dashboard',
+                    tab='waiting_user'
+                ) }}"
+                class="text-decoration-none small"
+            >
+                Xem Ticket →
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- ĐÃ XỬ LÝ -->
+
+    <div class="col-xl-3 col-md-6">
+
+        <div class="stat-card">
+
+            <div class="stat-label">
+                Đã xử lý
+            </div>
+
+            <div class="stat-value">
+                {{ count_done }}
+            </div>
+
+            <a
+                href="{{ url_for(
+                    'tickets.it_dashboard',
+                    tab='done'
+                ) }}"
+                class="text-decoration-none small"
+            >
+                Xem Ticket →
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ============================== -->
+<!-- STATUS TABS -->
+<!-- ============================== -->
+
+<div class="crm-card mb-4">
+
+    <div class="crm-tabs">
+
+
+        <a
+            href="{{ url_for(
+                'tickets.it_dashboard',
+                tab='unaccepted'
+            ) }}"
+            class="crm-tab
+            {% if current_tab == 'unaccepted' %}
+                active
+            {% endif %}"
+        >
+            Chưa tiếp nhận
+
+            <span class="badge bg-secondary ms-1">
+                {{ count_unaccepted }}
+            </span>
+        </a>
+
+
+        <a
+            href="{{ url_for(
+                'tickets.it_dashboard',
+                tab='in_progress'
+            ) }}"
+            class="crm-tab
+            {% if current_tab == 'in_progress' %}
+                active
+            {% endif %}"
+        >
+            Đang xử lý
+
+            <span class="badge bg-primary ms-1">
+                {{ count_in_progress }}
+            </span>
+        </a>
+
+
+        <a
+            href="{{ url_for(
+                'tickets.it_dashboard',
+                tab='waiting_user'
+            ) }}"
+            class="crm-tab
+            {% if current_tab == 'waiting_user' %}
+                active
+            {% endif %}"
+        >
+            Chờ phản hồi
+
+            <span class="badge bg-warning text-dark ms-1">
+                {{ count_waiting_user }}
+            </span>
+        </a>
+
+
+        <a
+            href="{{ url_for(
+                'tickets.it_dashboard',
+                tab='done'
+            ) }}"
+            class="crm-tab
+            {% if current_tab == 'done' %}
+                active
+            {% endif %}"
+        >
+            Đã xử lý
+
+            <span class="badge bg-success ms-1">
+                {{ count_done }}
+            </span>
+        </a>
+
+
+        <a
+            href="{{ url_for(
+                'tickets.it_dashboard',
+                tab='all'
+            ) }}"
+            class="crm-tab
+            {% if current_tab == 'all' %}
+                active
+            {% endif %}"
+        >
+            Tất cả
+        </a>
+
+
+        {% if current_user.role == "Admin" %}
+
+            <a
+                href="{{ url_for(
+                    'tickets.it_dashboard',
+                    tab='closed'
+                ) }}"
+                class="crm-tab
+                {% if current_tab == 'closed' %}
+                    active
+                {% endif %}"
+            >
+                Đã đóng
+
+                <span class="badge bg-dark ms-1">
+                    {{ count_closed }}
+                </span>
+            </a>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+
+<!-- ============================== -->
+<!-- SEARCH / FILTER -->
+<!-- ============================== -->
+
+<div class="crm-card mb-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+
+        <div>
+
+            <h5 class="mb-1">
+                Tra cứu Ticket
+            </h5>
+
+            <small class="text-muted">
+                Tìm kiếm theo tiêu đề hoặc lọc theo danh mục.
+            </small>
+
+        </div>
+
+    </div>
+
+
+    <form
+        method="GET"
+        action="{{ url_for('tickets.it_dashboard') }}"
+    >
+
+        <input
+            type="hidden"
+            name="tab"
+            value="{{ current_tab }}"
+        >
+
+
+        <div class="row g-3 align-items-end">
+
+
+            <!-- SEARCH -->
+
+            <div class="col-lg-5">
+
+                <label class="form-label fw-semibold">
+                    Từ khóa
+                </label>
+
+                <input
+                    type="text"
+                    name="keyword"
+                    class="form-control"
+                    placeholder="Nhập tiêu đề Ticket..."
+                    value="{{ keyword }}"
+                >
+
+            </div>
+
+
+            <!-- CATEGORY -->
+
+            <div class="col-lg-4">
+
+                <label class="form-label fw-semibold">
+                    Danh mục
+                </label>
+
+                <select
+                    name="category_id"
+                    class="form-select"
+                >
+
+                    <option value="">
+                        Tất cả danh mục
+                    </option>
+
+
+                    {% for category in categories %}
+
+                        <option
+                            value="{{ category.id }}"
+                            {% if
+                                selected_category_id
+                                == category.id|string
+                            %}
+                                selected
+                            {% endif %}
+                        >
+                            {{ category.name }}
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
+            <!-- BUTTON -->
+
+            <div class="col-lg-3">
+
+                <div class="d-flex gap-2">
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary flex-grow-1"
+                    >
+                        Tra cứu
+                    </button>
+
+
+                    <a
+                        href="{{ url_for(
                             'tickets.it_dashboard',
                             tab=current_tab
                         ) }}"
-                class="btn btn-outline-secondary"
-              >
-                Xóa lọc
-              </a>
+                        class="btn btn-outline-secondary"
+                    >
+                        Xóa lọc
+                    </a>
+
+                </div>
+
             </div>
-          </div>
-        </form>
-      </div>
 
-      <!-- ============================== -->
-      <!-- TICKET TABLE -->
-      <!-- ============================== -->
-
-      <div class="ticket-table-box">
-        <div
-          class="d-flex justify-content-between align-items-center p-3 border-bottom"
-        >
-          <h5 class="mb-0">Danh sách Ticket</h5>
-
-          <span class="text-muted"> {{ tickets|length }} kết quả </span>
         </div>
 
-        <div class="table-responsive">
-          <table class="table table-hover align-middle">
-            <thead class="table-light">
-              <tr>
-                <th>ID</th>
+    </form>
 
-                <th>Tiêu đề</th>
+</div>
 
-                <th>Người tạo</th>
 
-                <th>Danh mục</th>
+<!-- ============================== -->
+<!-- TICKET LIST -->
+<!-- ============================== -->
 
-                <th>Trạng thái</th>
+<div class="crm-card p-0 overflow-hidden">
 
-                <th>Người xử lý</th>
 
-                <th>Cập nhật</th>
+    <!-- TABLE HEADER -->
 
-                <th class="text-center">Thao tác</th>
-              </tr>
-            </thead>
+    <div
+        class="d-flex justify-content-between
+               align-items-center
+               px-4 py-3
+               border-bottom"
+    >
 
-            <tbody>
-              {% for ticket in tickets %}
+        <div>
 
-              <tr>
-                <td>#{{ ticket.id }}</td>
+            <h5 class="mb-1">
+                Danh sách Ticket
+            </h5>
 
-                <td class="ticket-title">{{ ticket.title }}</td>
+            <small class="text-muted">
+                Các Ticket thuộc trạng thái đang chọn.
+            </small>
 
-                <td>
-                  {% if ticket.created_by %} {{ ticket.created_by.username }} {%
-                  else %} - {% endif %}
-                </td>
-
-                <td>
-                  {% if ticket.category %} {{ ticket.category.name }} {% else %}
-                  Chưa phân loại {% endif %}
-                </td>
-
-                <td>
-                  {% if ticket.status == "Open" %}
-
-                  <span class="badge bg-secondary"> Chưa tiếp nhận </span>
-
-                  {% elif ticket.status == "In Progress" %}
-
-                  <span class="badge bg-primary"> Đang xử lý </span>
-
-                  {% elif ticket.status == "Resolved" and
-                  ticket.resolution_confirmed is none %}
-
-                  <span class="badge bg-warning text-dark">
-                    Chờ User phản hồi
-                  </span>
-
-                  {% elif ticket.status == "Resolved" and
-                  ticket.resolution_confirmed == true %}
-
-                  <span class="badge bg-success"> Đã xử lý </span>
-
-                  {% elif ticket.status == "Closed" %}
-
-                  <span class="badge bg-dark"> Đã đóng </span>
-
-                  {% else %}
-
-                  <span class="badge bg-info"> {{ ticket.status }} </span>
-
-                  {% endif %}
-                </td>
-
-                <td>
-                  {% if ticket.assigned_to %} {{ ticket.assigned_to.username }}
-                  {% else %}
-
-                  <span class="text-muted"> Chưa có </span>
-
-                  {% endif %}
-                </td>
-
-                <td>
-                  {% if ticket.updated_at %} {{ ticket.updated_at.strftime(
-                  "%d/%m/%Y %H:%M" ) }} {% else %} - {% endif %}
-                </td>
-
-                <td class="text-center">
-                  <a
-                    href="{{ url_for(
-                                        'tickets.ticket_detail',
-                                        ticket_id=ticket.id
-                                    ) }}"
-                    class="btn btn-success btn-sm action-button"
-                  >
-                    Xử lý
-                  </a>
-                </td>
-              </tr>
-
-              {% else %}
-
-              <tr>
-                <td colspan="8" class="text-center text-muted py-4">
-                  Không có Ticket nào.
-                </td>
-              </tr>
-
-              {% endfor %}
-            </tbody>
-          </table>
         </div>
-      </div>
+
+
+        <div class="text-muted small">
+
+            {{ tickets|length }} Ticket
+
+        </div>
+
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  </body>
-</html>
+
+    <!-- TABLE -->
+
+    <div class="table-responsive">
+
+        <table class="table crm-table align-middle">
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Ticket
+                    </th>
+
+                    <th>
+                        Người tạo
+                    </th>
+
+                    <th>
+                        Danh mục
+                    </th>
+
+                    <th>
+                        Trạng thái
+                    </th>
+
+                    <th>
+                        Người xử lý
+                    </th>
+
+                    <th>
+                        Cập nhật
+                    </th>
+
+                    <th class="text-center">
+                        Thao tác
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+
+                {% for ticket in tickets %}
+
+
+                    <tr>
+
+
+                        <!-- TICKET -->
+
+                        <td>
+
+                            <div class="ticket-id">
+                                #{{ ticket.id }}
+                            </div>
+
+                            <div class="ticket-title">
+                                {{ ticket.title }}
+                            </div>
+
+                        </td>
+
+
+                        <!-- USER -->
+
+                        <td>
+
+                            {% if ticket.created_by %}
+
+                                {{ ticket.created_by.username }}
+
+                            {% else %}
+
+                                <span class="text-muted">
+                                    -
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <!-- CATEGORY -->
+
+                        <td>
+
+                            {% if ticket.category %}
+
+                                {{ ticket.category.name }}
+
+                            {% else %}
+
+                                <span class="text-muted">
+                                    Chưa phân loại
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <!-- STATUS -->
+
+                        <td>
+
+
+                            {% if ticket.status == "Open" %}
+
+                                <span class="badge bg-secondary">
+                                    Chưa tiếp nhận
+                                </span>
+
+
+                            {% elif ticket.status == "In Progress" %}
+
+                                <span class="badge bg-primary">
+                                    Đang xử lý
+                                </span>
+
+
+                            {% elif
+                                ticket.status == "Resolved"
+                                and ticket.resolution_confirmed is none
+                            %}
+
+                                <span
+                                    class="badge bg-warning text-dark"
+                                >
+                                    Chờ User phản hồi
+                                </span>
+
+
+                            {% elif
+                                ticket.status == "Resolved"
+                                and ticket.resolution_confirmed == true
+                            %}
+
+                                <span class="badge bg-success">
+                                    Đã xử lý
+                                </span>
+
+
+                            {% elif ticket.status == "Closed" %}
+
+                                <span class="badge bg-dark">
+                                    Đã đóng
+                                </span>
+
+
+                            {% else %}
+
+                                <span class="badge bg-info">
+                                    {{ ticket.status }}
+                                </span>
+
+                            {% endif %}
+
+
+                        </td>
+
+
+                        <!-- ASSIGNEE -->
+
+                        <td>
+
+                            {% if ticket.assigned_to %}
+
+                                <div class="fw-semibold">
+                                    {{ ticket.assigned_to.username }}
+                                </div>
+
+                                <small class="text-muted">
+                                    {{ ticket.assigned_to.role }}
+                                </small>
+
+                            {% else %}
+
+                                <span class="text-muted">
+                                    Chưa phân công
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <!-- UPDATED -->
+
+                        <td>
+
+                            {% if ticket.updated_at %}
+
+                                <div>
+                                    {{ ticket.updated_at.strftime(
+                                        "%d/%m/%Y"
+                                    ) }}
+                                </div>
+
+                                <small class="text-muted">
+                                    {{ ticket.updated_at.strftime(
+                                        "%H:%M"
+                                    ) }}
+                                </small>
+
+                            {% else %}
+
+                                -
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <!-- ACTION -->
+
+                        <td class="text-center">
+
+                            <a
+                                href="{{ url_for(
+                                    'tickets.ticket_detail',
+                                    ticket_id=ticket.id
+                                ) }}"
+                                class="btn-process"
+                            >
+
+                                {% if ticket.status == "Open" %}
+
+                                    Xử lý
+
+                                {% else %}
+
+                                    Chi tiết
+
+                                {% endif %}
+
+                            </a>
+
+                        </td>
+
+
+                    </tr>
+
+
+                {% else %}
+
+
+                    <tr>
+
+                        <td
+                            colspan="7"
+                            class="text-center py-5"
+                        >
+
+                            <div class="text-muted">
+
+                                Không có Ticket nào
+                                trong danh sách này.
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+
+                {% endfor %}
+
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+{% endblock %}

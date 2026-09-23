@@ -411,3 +411,45 @@ def it_dashboard():
         count_done=count_done,
         count_closed=count_closed,
     )
+
+
+@ticket_bp.route("/tickets/<int:ticket_id>/resolve", methods=["POST"])
+@login_required
+@roles_required("Admin", "IT Support")
+def resolve_ticket(ticket_id):
+
+    ticket = db.get_or_404(Ticket, ticket_id)
+
+    if ticket.status != "In Progress":
+
+        flash("Chỉ Ticket đang xử lý mới có thể hoàn tất.", "warning")
+
+        return redirect(url_for("tickets.ticket_detail", ticket_id=ticket.id))
+
+    if current_user.role == "IT Support" and ticket.assigned_to_id != current_user.id:
+
+        flash("Bạn không phải người đang phụ trách Ticket này.", "danger")
+
+        return redirect(url_for("tickets.ticket_detail", ticket_id=ticket.id))
+
+    resolution_note = request.form.get("resolution_note", "").strip()
+
+    if not resolution_note:
+
+        flash("Vui lòng nhập phương án xử lý.", "danger")
+
+        return redirect(url_for("tickets.ticket_detail", ticket_id=ticket.id))
+
+    ticket.resolution_note = resolution_note
+
+    ticket.status = "Resolved"
+
+    ticket.resolved_at = datetime.utcnow()
+
+    ticket.resolution_confirmed = None
+
+    db.session.commit()
+
+    flash("Đã gửi kết quả xử lý cho người dùng xác nhận.", "success")
+
+    return redirect(url_for("tickets.it_dashboard", tab="waiting_user"))
