@@ -52,8 +52,16 @@ def ticket_detail(ticket_id):
 
     support_users = User.query.filter(User.role.in_(["IT Support", "Admin"])).all()
 
+    # User dùng giao diện hiện tại
+    if current_user.role == "User":
+
+        return render_template(
+            "ticket_detail.html", ticket=ticket, support_users=support_users
+        )
+
+    # IT Support / Admin dùng giao diện CRM mới
     return render_template(
-        "ticket_detail.html", ticket=ticket, support_users=support_users
+        "it_ticket_detail.html", ticket=ticket, support_users=support_users
     )
 
 
