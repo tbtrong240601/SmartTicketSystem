@@ -10,13 +10,6 @@ from app.utils.decorators import roles_required
 
 ticket_bp = Blueprint("tickets", __name__)
 
-from flask_login import login_required
-
-from app.extensions import db
-from app.models import Ticket
-
-ticket_bp = Blueprint("tickets", __name__)
-
 
 @ticket_bp.route("/create-ticket", methods=["GET", "POST"])
 @login_required

@@ -32,6 +32,4 @@ def create_app():
 
         from app import models
 
-        db.create_all()
-
     return app

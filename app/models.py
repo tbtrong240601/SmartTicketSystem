@@ -84,8 +84,6 @@ class Ticket(db.Model):
 
     closed_at = db.Column(db.DateTime, nullable=True)
 
-    resolution_note = db.Column(db.Text, nullable=True)
-
 
 class Comment(db.Model):
     __tablename__ = "comments"
