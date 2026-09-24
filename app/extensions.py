@@ -8,3 +8,5 @@ db = SQLAlchemy()
 login_manager = LoginManager()
 
 migrate = Migrate()
+from flask_wtf.csrf import CSRFProtect
+csrf = CSRFProtect()

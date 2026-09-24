@@ -1,0 +1,1 @@
+{% extends "base.html" %}{% block content %}<div class="card"><div class="card-body"><p class="eyebrow">YÊU CẦU CHƯA THỂ HOÀN THÀNH</p><h1>{{ code }}</h1><p>{{ message }}</p><a class="btn btn-primary" href="{{ url_for('main.home') if current_user.is_authenticated else url_for('auth.login') }}">Quay về</a></div></div>{% endblock %}

@@ -1,8 +1,9 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request, redirect, url_for, flash, abort, current_app
 from flask_login import login_user, logout_user, login_required, current_user
 
 from app.extensions import db
 from app.models import User
+from sqlalchemy.exc import IntegrityError
 
 auth_bp = Blueprint("auth", __name__)
 
@@ -32,8 +33,8 @@ def register():
             return redirect(url_for("auth.register"))
 
         # Kiểm tra độ dài mật khẩu
-        if len(password) < 6:
-            flash("Mật khẩu phải có ít nhất 6 ký tự.", "danger")
+        if not 8 <= len(password) <= 128 or not 3 <= len(username) <= 100:
+            flash("Tên đăng nhập cần 3–100 ký tự; mật khẩu cần 8–128 ký tự.", "danger")
             return redirect(url_for("auth.register"))
 
         # Tạo User mới
@@ -42,7 +43,12 @@ def register():
         user.set_password(password)
 
         db.session.add(user)
-        db.session.commit()
+        try:
+            db.session.commit()
+        except IntegrityError:
+            db.session.rollback()
+            flash("Tên đăng nhập đã tồn tại.", "warning")
+            return redirect(url_for("auth.register"))
 
         flash("Đăng ký thành công. Vui lòng đăng nhập.", "success")
 
@@ -62,22 +68,28 @@ def login():
         username = request.form.get("username", "").strip()
         password = request.form.get("password", "")
 
+        from app.services.throttle import allow_login, record_failure, clear_failures
+        key = (request.remote_addr or "local", username.lower())
+        if not allow_login(key):
+            abort(429, description="Đăng nhập sai quá nhiều lần. Vui lòng thử lại sau 15 phút.")
         user = User.query.filter_by(username=username).first()
 
-        if user and user.check_password(password):
+        if user and user.enabled and user.check_password(password):
 
+            clear_failures(key)
             login_user(user)
 
             flash("Đăng nhập thành công.", "success")
 
             return redirect(url_for("main.home"))
 
+        record_failure(key)
         flash("Tên đăng nhập hoặc mật khẩu không đúng.", "danger")
 
     return render_template("login.html")
 
 
-@auth_bp.route("/logout")
+@auth_bp.route("/logout", methods=["POST"])
 @login_required
 def logout():
 
@@ -86,3 +98,21 @@ def logout():
     flash("Đăng xuất thành công.", "success")
 
     return redirect(url_for("auth.login"))
+
+
+@auth_bp.route("/account", methods=["GET", "POST"])
+@login_required
+def account():
+    if request.method == "POST":
+        old = request.form.get("old_password", "")
+        new = request.form.get("password", "")
+        if not current_user.check_password(old):
+            flash("Mật khẩu hiện tại chưa đúng.", "danger")
+        elif not 8 <= len(new) <= 128:
+            flash("Mật khẩu mới cần từ 8 đến 128 ký tự.", "danger")
+        else:
+            current_user.set_password(new)
+            db.session.commit()
+            flash("Đã đổi mật khẩu.", "success")
+            return redirect(url_for("main.home"))
+    return render_template("account.html")

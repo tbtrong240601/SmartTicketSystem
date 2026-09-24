@@ -17,6 +17,12 @@ class User(UserMixin, db.Model):
 
     role = db.Column(db.String(20), nullable=False, default="User")
 
+    enabled = db.Column(db.Boolean, nullable=False, default=True, server_default=db.true())
+
+    @property
+    def is_active(self):
+        return self.enabled
+
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
 
@@ -105,4 +111,43 @@ class Comment(db.Model):
 
 @login_manager.user_loader
 def load_user(user_id):
-    return db.session.get(User, int(user_id))
+    try:
+        user = db.session.get(User, int(user_id))
+        return user if user and user.enabled else None
+    except (ValueError, TypeError):
+        return None
+
+
+class KnowledgeArticle(db.Model):
+    __tablename__ = "knowledge_articles"
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(200), nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    category_id = db.Column(db.Integer, db.ForeignKey("categories.id"), nullable=True)
+    author_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    published = db.Column(db.Boolean, nullable=False, default=False, server_default=db.false())
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow)
+    category = db.relationship("Category", backref="articles")
+    author = db.relationship("User")
+
+
+class AuditEvent(db.Model):
+    __tablename__ = "audit_events"
+    id = db.Column(db.Integer, primary_key=True)
+    actor_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=True)
+    ticket_id = db.Column(db.Integer, db.ForeignKey("tickets.id"), nullable=True)
+    action = db.Column(db.String(100), nullable=False)
+    detail = db.Column(db.String(500), nullable=False, default="")
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    actor = db.relationship("User")
+    ticket = db.relationship("Ticket", backref=db.backref("events", order_by="AuditEvent.id"))
+
+
+class AIRequest(db.Model):
+    __tablename__ = "ai_requests"
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    ticket_id = db.Column(db.Integer, db.ForeignKey("tickets.id"), nullable=True)
+    mode = db.Column(db.String(30), nullable=False)
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow, index=True)

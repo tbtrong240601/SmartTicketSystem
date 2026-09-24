@@ -7,6 +7,7 @@ from sqlalchemy import or_
 from app.extensions import db
 from app.models import Ticket, Category, User, Comment
 from app.utils.decorators import roles_required
+from app.services.common import audit, text_field, optional_category
 
 ticket_bp = Blueprint("tickets", __name__)
 
@@ -16,9 +17,9 @@ ticket_bp = Blueprint("tickets", __name__)
 def create_ticket():
     categories = Category.query.order_by(Category.name).all()
     if request.method == "POST":
-        title = request.form.get("title")
-        desc = request.form.get("description")
-        category_id = request.form.get("category_id")
+        title = text_field("title", 200)
+        desc = text_field("description", 10000)
+        category_id = optional_category()
 
         ticket = Ticket(
             title=title,
@@ -29,6 +30,8 @@ def create_ticket():
         )
 
         db.session.add(ticket)
+        db.session.flush()
+        audit(request.endpoint, ticket.status, ticket.id)
         db.session.commit()
         return redirect(url_for("main.home"))
     return render_template("create_ticket.html", categories=categories)
@@ -43,7 +46,7 @@ def ticket_detail(ticket_id):
     if current_user.role == "User" and ticket.created_by_id != current_user.id:
         abort(403)
 
-    support_users = User.query.filter(User.role.in_(["IT Support", "Admin"])).all()
+    support_users = User.query.filter(User.role.in_(["IT Support", "Admin"]), User.enabled.is_(True)).all()
 
     # User dùng giao diện hiện tại
     if current_user.role == "User":
@@ -63,20 +66,26 @@ def ticket_detail(ticket_id):
 @roles_required("Admin", "IT Support")
 def assign_ticket(ticket_id):
 
-    ticket = db.get_or_404(Ticket, ticket_id)
+    ticket = Ticket.query.filter_by(id=ticket_id).with_for_update().first_or_404()
 
-    assigned_to_id = request.form.get("assigned_to_id")
+    if current_user.role != "Admin":
+        abort(403)
+    if ticket.status != "Open":
+        abort(400, description="Chỉ phân công Ticket đang Open.")
+
+    assigned_to_id = request.form.get("assigned_to_id", type=int)
 
     support_user = db.session.get(User, assigned_to_id)
 
     if not support_user:
         abort(404)
 
-    if support_user.role not in ["Admin", "IT Support"]:
+    if not support_user.enabled or support_user.role not in ["Admin", "IT Support"]:
         abort(400)
 
     ticket.assigned_to_id = support_user.id
 
+    audit(request.endpoint, ticket.status, ticket.id)
     db.session.commit()
 
     return redirect(url_for("tickets.ticket_detail", ticket_id=ticket.id))
@@ -86,13 +95,15 @@ def assign_ticket(ticket_id):
 @login_required
 def add_comment(ticket_id):
 
-    ticket = db.get_or_404(Ticket, ticket_id)
+    ticket = Ticket.query.filter_by(id=ticket_id).with_for_update().first_or_404()
 
     # User chỉ được bình luận Ticket do mình tạo
     if current_user.role == "User" and ticket.created_by_id != current_user.id:
         abort(403)
 
-    content = request.form.get("content", "").strip()
+    if ticket.status == "Closed":
+        abort(400, description="Không thể bình luận vào Ticket đã đóng.")
+    content = text_field("content", 5000)
 
     if not content:
 
@@ -103,6 +114,7 @@ def add_comment(ticket_id):
     comment = Comment(content=content, ticket_id=ticket.id, user_id=current_user.id)
 
     db.session.add(comment)
+    audit(request.endpoint, ticket.status, ticket.id)
     db.session.commit()
 
     flash("Đã thêm bình luận.", "success")
@@ -115,7 +127,7 @@ def add_comment(ticket_id):
 @roles_required("Admin", "IT Support")
 def update_status(ticket_id):
 
-    ticket = db.get_or_404(Ticket, ticket_id)
+    ticket = Ticket.query.filter_by(id=ticket_id).with_for_update().first_or_404()
 
     if current_user.role == "IT Support" and ticket.assigned_to_id != current_user.id:
 
@@ -141,19 +153,7 @@ def update_status(ticket_id):
         return redirect(url_for("tickets.ticket_detail", ticket_id=ticket.id))
 
     if new_status == "Resolved":
-
-        ticket.status = "Resolved"
-
-        ticket.resolved_at = datetime.utcnow()
-
-        # User phải xác nhận lại
-        ticket.resolution_confirmed = None
-
-        db.session.commit()
-
-        flash("Ticket đã được xử lý. " "Đang chờ người dùng xác nhận.", "success")
-
-        return redirect(url_for("tickets.ticket_detail", ticket_id=ticket.id))
+        return resolve_ticket(ticket_id)
 
     if new_status == "Closed":
 
@@ -166,11 +166,10 @@ def update_status(ticket_id):
         ticket.status = "Closed"
         ticket.closed_at = datetime.utcnow()
 
-        db.session.commit()
-
     # Open → In Progress
     ticket.status = new_status
 
+    audit(request.endpoint, ticket.status, ticket.id)
     db.session.commit()
 
     flash(f"Đã cập nhật trạng thái thành {new_status}.", "success")
@@ -182,7 +181,7 @@ def update_status(ticket_id):
 @login_required
 def confirm_resolution(ticket_id):
 
-    ticket = db.get_or_404(Ticket, ticket_id)
+    ticket = Ticket.query.filter_by(id=ticket_id).with_for_update().first_or_404()
 
     # Chỉ chủ Ticket được xác nhận
     if ticket.created_by_id != current_user.id:
@@ -202,6 +201,7 @@ def confirm_resolution(ticket_id):
 
         ticket.resolution_confirmed = True
 
+        audit(request.endpoint, ticket.status, ticket.id)
         db.session.commit()
 
         flash(
@@ -218,6 +218,7 @@ def confirm_resolution(ticket_id):
 
         ticket.resolved_at = None
 
+        audit(request.endpoint, ticket.status, ticket.id)
         db.session.commit()
 
         flash(
@@ -238,7 +239,7 @@ def confirm_resolution(ticket_id):
 @roles_required("Admin", "IT Support")
 def accept_ticket(ticket_id):
 
-    ticket = db.get_or_404(Ticket, ticket_id)
+    ticket = Ticket.query.filter_by(id=ticket_id).with_for_update().first_or_404()
 
     if ticket.status != "Open":
 
@@ -256,6 +257,7 @@ def accept_ticket(ticket_id):
 
     ticket.status = "In Progress"
 
+    audit(request.endpoint, ticket.status, ticket.id)
     db.session.commit()
 
     flash("Bạn đã tiếp nhận Ticket và bắt đầu xử lý.", "success")
@@ -268,7 +270,7 @@ def accept_ticket(ticket_id):
 @roles_required("Admin", "IT Support")
 def transfer_ticket(ticket_id):
 
-    ticket = db.get_or_404(Ticket, ticket_id)
+    ticket = Ticket.query.filter_by(id=ticket_id).with_for_update().first_or_404()
 
     # Chỉ chuyển Ticket đang được xử lý
     if ticket.status != "In Progress":
@@ -302,7 +304,7 @@ def transfer_ticket(ticket_id):
     if not new_assignee:
         abort(404)
 
-    if new_assignee.role not in ["IT Support", "Admin"]:
+    if not new_assignee.enabled or new_assignee.role not in ["IT Support", "Admin"]:
         abort(400)
 
     if ticket.assigned_to_id == new_assignee.id:
@@ -315,6 +317,7 @@ def transfer_ticket(ticket_id):
 
     ticket.status = "In Progress"
 
+    audit(request.endpoint, ticket.status, ticket.id)
     db.session.commit()
 
     flash(f"Đã chuyển Ticket cho {new_assignee.username}.", "success")
@@ -340,7 +343,6 @@ def it_dashboard():
     else:
         base_query = Ticket.query.filter(
             or_(Ticket.status == "Open", Ticket.assigned_to_id == current_user.id),
-            Ticket.status != "Closed",
         )
 
     count_unaccepted = base_query.filter(Ticket.status == "Open").count()
@@ -393,7 +395,11 @@ def it_dashboard():
 
     if category_id:
 
-        query = query.filter(Ticket.category_id == int(category_id))
+        try:
+            category_number = int(category_id)
+        except ValueError:
+            abort(400, description="Danh mục không hợp lệ.")
+        query = query.filter(Ticket.category_id == category_number)
 
     tickets = query.order_by(Ticket.updated_at.desc()).all()
 
@@ -419,7 +425,7 @@ def it_dashboard():
 @roles_required("Admin", "IT Support")
 def resolve_ticket(ticket_id):
 
-    ticket = db.get_or_404(Ticket, ticket_id)
+    ticket = Ticket.query.filter_by(id=ticket_id).with_for_update().first_or_404()
 
     if ticket.status != "In Progress":
 
@@ -433,7 +439,7 @@ def resolve_ticket(ticket_id):
 
         return redirect(url_for("tickets.ticket_detail", ticket_id=ticket.id))
 
-    resolution_note = request.form.get("resolution_note", "").strip()
+    resolution_note = text_field("resolution_note", 10000)
 
     if not resolution_note:
 
@@ -449,6 +455,7 @@ def resolve_ticket(ticket_id):
 
     ticket.resolution_confirmed = None
 
+    audit(request.endpoint, ticket.status, ticket.id)
     db.session.commit()
 
     flash("Đã gửi kết quả xử lý cho người dùng xác nhận.", "success")

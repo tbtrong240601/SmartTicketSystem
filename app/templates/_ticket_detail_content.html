@@ -109,7 +109,7 @@
                 'tickets.assign_ticket',
                 ticket_id=ticket.id
             ) }}"
-      >
+      ><input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <div class="mb-3">
           <select name="assigned_to_id" class="form-select" required>
             <option value="">-- Chọn nhân viên --</option>
@@ -172,7 +172,7 @@
                     'tickets.accept_ticket',
                     ticket_id=ticket.id
                 ) }}"
-      >
+      ><input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <button type="submit" class="btn btn-primary">Tiếp nhận xử lý</button>
       </form>
 
@@ -219,7 +219,7 @@
                             'tickets.transfer_ticket',
                             ticket_id=ticket.id
                         ) }}"
-          >
+          ><input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <div class="mb-3">
               <label class="form-label"> Chuyển cho </label>
 
@@ -261,7 +261,7 @@
                             'tickets.resolve_ticket',
                             ticket_id=ticket.id
                         ) }}"
-          >
+          ><input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <div class="mb-3">
               <label class="form-label"> Nội dung xử lý </label>
 
@@ -335,7 +335,7 @@
                         'tickets.update_status',
                         ticket_id=ticket.id
                     ) }}"
-      >
+      ><input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <input type="hidden" name="status" value="Closed" />
 
         <button type="submit" class="btn btn-dark">Đóng Ticket</button>
@@ -393,7 +393,7 @@
                         'tickets.confirm_resolution',
                         ticket_id=ticket.id
                     ) }}"
-        >
+        ><input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
           <button
             type="submit"
             name="confirmation"
@@ -458,7 +458,7 @@
                 'tickets.add_comment',
                 ticket_id=ticket.id
             ) }}"
-      >
+      ><input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <div class="mb-3">
           <label class="form-label"> Thêm bình luận </label>
 
@@ -480,3 +480,8 @@
       </div>
 
       {% endif %}
+
+<hr><div class="d-flex flex-wrap gap-2 mb-4"><a class="btn btn-outline-primary" href="{{ url_for('ai.assistant',ticket_id=ticket.id) }}">Tra cứu / gợi ý AI</a>
+{% if current_user.role in ['Admin','IT Support'] and ticket.status in ['Resolved','Closed'] and ticket.resolution_note and (current_user.role == 'Admin' or ticket.assigned_to_id == current_user.id) %}<form method="post" action="{{ url_for('knowledge.from_ticket',ticket_id=ticket.id) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn btn-outline-secondary">Tạo bài hướng dẫn từ kết quả xử lý</button></form>{% endif %}</div>
+<h3 class="h5">Lịch sử Ticket</h3><p class="small text-muted">Hoạt động ghi nhận từ phiên bản hiện tại · UTC</p>
+{% for event in ticket.events %}<div class="metric-line"><span>{{ event.actor.username if event.actor else 'Hệ thống' }} · {{ event.action }} · {{ event.detail }}</span><small>{{ event.created_at.strftime('%d/%m/%Y %H:%M') }}</small></div>{% else %}<p class="text-muted">Chưa có hoạt động được ghi nhận.</p>{% endfor %}

@@ -1,45 +1,72 @@
-# SmartTicketSystem
+# SmartTicket System
 
-Ứng dụng quản lý Ticket dùng Flask, SQLAlchemy và Flask-Migrate.
+Ứng dụng quản lý hỗ trợ IT bằng Flask, MariaDB/MySQL (hoặc SQLite), kèm Knowledge Base và tích hợp Groq.
 
-## Chạy local trên Windows (PowerShell)
+## Chức năng
 
-Đã kiểm tra với Python 3.14.7. Cài thư viện trong môi trường riêng:
+- **User:** đăng ký/đăng nhập, đổi mật khẩu, tạo/theo dõi Ticket, bình luận, xác nhận đã khắc phục hoặc trả lại xử lý.
+- **IT Support:** tiếp nhận, chuyển phiếu, nhập phương án xử lý, chờ xác nhận rồi đóng Ticket; viết bài nháp Knowledge Base.
+- **Admin:** dashboard, thống kê 7 ngày, khối lượng nhân viên, xuất CSV, quản lý danh mục, tạo tài khoản/đổi vai trò/khóa tài khoản/đặt lại mật khẩu; duyệt bài viết; xem nhật ký.
+- **Knowledge Base:** tìm kiếm, lọc danh mục, bản nháp/xuất bản, tạo bản nháp từ phương án Ticket; chỉ bài đã xuất bản được dùng cho trợ lý.
+- **AI:** truy xuất 3 bài liên quan bằng từ khóa tiếng Việt bỏ dấu; gọi Groq khi có khóa và người dùng cho phép gửi câu hỏi. Không có khóa hoặc dịch vụ lỗi thì hiển thị tra cứu nội bộ có nhãn rõ ràng.
+
+## Chạy nhanh trên máy Windows hiện tại
+
+1. Bật **MySQL** trong XAMPP. Database thực tế `smart_ticket_db` đã được nâng cấp đến revision `000000000003`.
+2. Mở `start.bat` trong thư mục dự án. Lần đầu cần Python và Internet để cài dependencies.
+3. Truy cập **http://127.0.0.1:5000**. Dừng bằng Ctrl+C trong cửa sổ máy chủ.
+4. Tài khoản hiện có được giữ nguyên. Tài khoản Admin mới được bàn giao trong file riêng `TAI_KHOAN_ADMIN_LOCAL.txt`, không nằm trong ZIP hoặc Git. Đổi mật khẩu sau khi đăng nhập.
+
+`start.bat` dùng Waitress, không bật debug, chỉ lắng nghe localhost. `serve.py` kiểm tra revision trước khi chạy và không tự sửa database. Nếu chưa có `.env`, lần khởi động đầu tự tạo SECRET_KEY ngẫu nhiên cho local.
+
+## Cài từ đầu hoặc trên máy khác
+
+Python đã kiểm tra: **3.14.7**. MariaDB đã kiểm tra: **10.4.32 (XAMPP)**.
 
 ```powershell
 python -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -r requirements.txt
-$env:SECRET_KEY = "replace-with-your-local-secret"
+.\.venv\Scripts\python.exe -m pip install -r requirements-lock.txt
+Copy-Item .env.example .env
 ```
 
-Chạy thử với SQLite, không cần cài MySQL:
+Đặt SECRET_KEY ngẫu nhiên và URI database trong `.env`. Tạo database MySQL trống trước nếu dùng MySQL. Hoặc dùng SQLite:
 
 ```powershell
 $env:SQLALCHEMY_DATABASE_URI = "sqlite:///smart_ticket_dev.db"
 .\.venv\Scripts\python.exe -m flask --app run db upgrade
-.\.venv\Scripts\python.exe -m flask --app run run --debug
+.\.venv\Scripts\python.exe -m flask --app run create-admin --username admin
+.\.venv\Scripts\python.exe -m flask --app run seed-knowledge --author admin
+.\.venv\Scripts\python.exe serve.py
 ```
 
-Database SQLite được tạo trong `instance/`. Mở http://127.0.0.1:5000 và đăng ký tài khoản User.
-Ứng dụng chưa có chức năng quản trị để tạo tài khoản IT Support/Admin.
+Lệnh `create-admin` hỏi mật khẩu, không có tài khoản/mật khẩu mặc định. `seed-knowledge` thêm 3 bài có nhãn `[Mẫu]`, không tạo Ticket hoặc ghi đè dữ liệu cũ.
 
-Nếu dùng MySQL, tạo database `smart_ticket_db` trước, rồi đặt URI phù hợp:
+## Cấu hình
 
-```powershell
-$env:SQLALCHEMY_DATABASE_URI = "mysql+pymysql://USER:PASSWORD@localhost/smart_ticket_db"
-```
+| Biến | Ý nghĩa |
+|---|---|
+| SECRET_KEY | Khóa ký session, cần giá trị riêng khi triển khai |
+| SQLALCHEMY_DATABASE_URI | URI ưu tiên, ví dụ `mysql+pymysql://USER:PASSWORD@localhost/smart_ticket_db` |
+| DATABASE_URL | URI dự phòng nếu biến trên trống |
+| GROQ_API_KEY | Khóa Groq; để trống để chỉ tra cứu nội bộ |
+| GROQ_MODEL | Mặc định `llama-3.3-70b-versatile`, có thể thay theo tài khoản |
+| COOKIE_SECURE | `true` khi triển khai HTTPS; local HTTP dùng `false` |
 
-Mật khẩu chứa ký tự đặc biệt phải được URL-encode trong URI.
-Thứ tự cấu hình database: `SQLALCHEMY_DATABASE_URI` → `DATABASE_URL` →
-`mysql+pymysql://root:@localhost/smart_ticket_db` (fallback local cũ).
-`SECRET_KEY` có fallback chỉ dành cho development; đặt giá trị riêng khi triển khai.
-Ứng dụng đọc biến môi trường của tiến trình; không tự nạp file `.env`.
-Chỉ dùng `--debug` khi phát triển local.
+`.env` được nạp từ thư mục dự án, không ghi đè biến môi trường đã đặt. `.env` không được đưa vào Git. Mật khẩu có ký tự đặc biệt trong URI phải URL-encode. Fallback MySQL local giữ như dự án gốc; không dùng tài khoản root không mật khẩu để triển khai công khai.
 
-## Nâng cấp database hiện có
+## AI Groq
 
-Sao lưu database và thử nâng cấp bản sao trước khi chạy trên dữ liệu đang sử dụng.
-Đặt URI trỏ đúng database, rồi kiểm tra revision:
+1. Tạo API key trên [Groq Console](https://console.groq.com/keys), đặt `GROQ_API_KEY` trong `.env`, khởi động lại server.
+2. Admin xuất bản bài hướng dẫn đã được kiểm tra.
+3. Mở Trợ lý AI, nhập câu hỏi, chọn cho phép gửi câu hỏi và nguồn đến Groq, rồi gửi.
+4. Kết quả ghi rõ **Groq** hoặc **tra cứu nội bộ**. Không có nguồn phù hợp thì không gọi model.
+
+AI không đọc toàn bộ database, không gửi mật khẩu tài khoản, không gửi bình luận/nhật ký; nội dung Ticket chỉ xuất hiện khi người dùng chọn Ticket và nhìn thấy trong ô câu hỏi có thể sửa. Có che một số khóa/email nhưng đây không phải công cụ loại bỏ toàn bộ dữ liệu nhạy cảm. Chỉ gửi sau khi người dùng tích chọn. Phản hồi hiển thị dạng văn bản được escape; model không được cấp công cụ thực thi hay cập nhật Ticket. Tối đa 20 yêu cầu/giờ/người dùng; log chỉ lưu người dùng, Ticket liên quan, thời gian và chế độ, không lưu prompt/response.
+
+Tham khảo API chính thức: https://console.groq.com/docs/api-reference và https://console.groq.com/docs/models.
+**Chưa có API key khi bàn giao: đã test nhánh tích hợp bằng phản hồi giả lập, chưa xác nhận gọi Groq thật hoặc chất lượng câu trả lời của model.**
+
+## Database và migration
 
 ```powershell
 .\.venv\Scripts\python.exe -m flask --app run db current
@@ -47,40 +74,25 @@ Sao lưu database và thử nâng cấp bản sao trước khi chạy trên dữ
 .\.venv\Scripts\python.exe -m flask --app run db check
 ```
 
-- Database trống: chạy toàn bộ chuỗi migration để tạo schema.
-- Database đã ở revision `1e6b9640cdac`: chỉ chạy migration sửa timestamp mới.
-- Database đã được quản lý bằng migration ở revision cũ hơn: Alembic tiếp tục từ revision đó.
-  Nếu schema đã bị thay đổi thủ công hoặc bởi `create_all()`, cần đối chiếu schema trước;
-  migration lịch sử có thể gặp cột trùng.
-- Database đã có bảng nhưng không có revision: **không chạy upgrade hoặc stamp head một cách mù quáng**.
-  Cần đối chiếu bảng, cột, kiểu dữ liệu, khóa ngoại và nullability với một revision cụ thể,
-  sau đó mới stamp đúng revision đã xác minh rồi upgrade. Repo không tự stamp hay xóa dữ liệu.
+Sao lưu và thử trên bản sao trước khi nâng cấp database đang có dữ liệu. Database có bảng nhưng chưa có revision cần đối chiếu schema, không tự ý `stamp head`.
 
-Revision `000000000001` bổ sung phần tạo bảng mà migration đầu tiên trước đây giả định đã có.
-Database đã có revision sẽ không chạy lại phần tạo bảng này. ID của các migration cũ được giữ nguyên;
-migration đầu tiên được nối với baseline mới. Khóa ngoại mới có tên rõ ràng và default thời gian
-dùng biểu thức SQLAlchemy để tương thích SQLite/MySQL.
+- `000000000001`: tạo baseline bị thiếu trước đây; các database đã có revision cũ không chạy lại baseline.
+- `000000000002`: thêm timestamp thiếu, giữ nguyên cột đã tồn tại. Revision này chỉ nâng cấp; muốn quay lại cần khôi phục backup.
+- `000000000003`: thêm trạng thái tài khoản, bài viết, nhật ký và metadata lượt hỏi AI. Không sửa Ticket cũ.
 
-Revision `000000000002` thêm `updated_at`, `resolved_at`, `closed_at` nếu chưa tồn tại.
-Khi thêm `updated_at`, giá trị của Ticket cũ được lấy từ `created_at`;
-không suy đoán thời điểm xử lý/đóng, nên hai cột đó để NULL cho dữ liệu cũ.
-Các cột và giá trị timestamp đã tồn tại được giữ nguyên.
-Migration sửa này cần kết nối database để kiểm tra schema, không hỗ trợ xuất SQL offline.
-Nó chỉ hỗ trợ nâng cấp; để quay lại cần khôi phục bản sao lưu, tránh xóa cột có dữ liệu từ trước.
+Bản sao lưu bàn giao riêng là dữ liệu riêng tư; không đưa lên GitHub hoặc đính kèm báo cáo công khai.
 
-Ứng dụng không tự tạo hay nâng cấp bảng khi khởi động.
-
-## Kiểm tra
+## Kiểm thử
 
 ```powershell
 .\.venv\Scripts\python.exe -m unittest discover -s tests -v
+.\.venv\Scripts\python.exe -m pip check
 ```
 
-Các test dùng database SQLite tạm riêng: dựng schema mới, nâng cấp dữ liệu cũ,
-giữ timestamp có sẵn, chạy upgrade lặp lại và luồng tạo → tiếp nhận → xử lý → xác nhận → đóng Ticket.
-Không kết nối database trong cấu hình local của bạn. MySQL thực tế cần được kiểm tra riêng.
+Tests tự tạo SQLite tạm, không dùng database thật. Bao phủ migration, phân quyền, CRUD, workflow, CSRF, khóa đăng nhập, dữ liệu nhập sai, CSV, truy xuất KB và AI mock. Migration còn được kiểm tra trực tiếp trên MariaDB sạch và bản khôi phục dữ liệu thực tế; xem `docs/TEST_REPORT.md`.
 
-## Các phần còn thiếu
+## Phạm vi bàn giao
 
-- Trang IT/Admin và User dùng chung nội dung chi tiết Ticket; IT/Admin dùng layout `base_it.html`.
-- Admin, quản lý Category/User/Role, Knowledge Base và AI chưa được bổ sung trong đợt sửa cấu trúc.
+Đây là bản ứng dụng local phục vụ demo/báo cáo. Chưa tích hợp email, tệp đính kèm, SSO/MFA, giám sát SLA hoặc triển khai Internet. Tìm kiếm AI là lexical retrieval, không phải vector database, fine-tuning hay model tự huấn luyện. Bộ đếm đăng nhập sai nằm trong một tiến trình; nếu chạy nhiều tiến trình/máy cần bộ đếm chung. Chưa benchmark tải đồng thời. Nhật ký bắt đầu từ phiên bản mới, không tái tạo lịch sử cũ. Thời gian lưu/hiển thị UTC.
+
+Tài liệu báo cáo và kịch bản demo nằm trong `docs/`.

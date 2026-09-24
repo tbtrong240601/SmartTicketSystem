@@ -25,7 +25,7 @@ class MigrationTests(unittest.TestCase):
         self.config = patch.object(Config, "SQLALCHEMY_DATABASE_URI", uri)
         self.config.start()
         self.app = create_app()
-        self.app.config.update(TESTING=True, SECRET_KEY="migration-test")
+        self.app.config.update(TESTING=True, SECRET_KEY="migration-test", WTF_CSRF_ENABLED=False)
         self.context = self.app.app_context()
         self.context.push()
 
