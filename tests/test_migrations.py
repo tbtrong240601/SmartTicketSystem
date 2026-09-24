@@ -97,6 +97,51 @@ class MigrationTests(unittest.TestCase):
         self.assertIsNotNone(ticket.resolved_at)
         self.assertIsNotNone(ticket.closed_at)
 
+    def test_ticket_detail_roles_and_states(self):
+        self.migrate()
+        users = [User(username=name, role=role, password_hash="test-only") for name, role in (
+            ("owner", "User"), ("other", "User"), ("support", "IT Support"),
+            ("admin", "Admin"), ("other-support", "IT Support"),
+        )]
+        db.session.add_all(users)
+        db.session.flush()
+        owner, other, support, admin, other_support = users
+        ticket = Ticket(title="<script>alert(1)</script>", description="Test issue",
+                        created_by_id=owner.id, assigned_to_id=support.id)
+        db.session.add(ticket)
+        db.session.commit()
+        client = self.app.test_client()
+        url = f"/tickets/{ticket.id}"
+        self.assertEqual(client.get(url).status_code, 302)
+        for status, confirmed in (("Open", None), ("In Progress", None),
+                                  ("Resolved", None), ("Resolved", True), ("Closed", True)):
+            ticket.status, ticket.resolution_confirmed = status, confirmed
+            db.session.commit()
+            for user in users:
+                with self.subTest(status=status, confirmed=confirmed, role=user.username):
+                    g.pop("_login_user", None)
+                    with client.session_transaction() as session:
+                        session["_user_id"] = str(user.id)
+                        session["_fresh"] = True
+                    response = client.get(url)
+                    self.assertEqual(response.status_code, 403 if user == other else 200)
+                    if user == other:
+                        continue
+                    html = response.get_data(as_text=True)
+                    self.assertIn("&lt;script&gt;", html)
+                    self.assertNotIn("<script>alert(1)</script>", html)
+                    if user.role in ("Admin", "IT Support"):
+                        self.assertIn('class="it-sidebar"', html)
+                        self.assertEqual(html.count("<!doctype html>"), 1)
+                        if status == "In Progress":
+                            self.assertEqual(f'/tickets/{ticket.id}/resolve' in html,
+                                             user in (support, admin))
+                        if status == "Resolved" and confirmed:
+                            self.assertEqual('value="Closed"' in html, user in (support, admin))
+                    else:
+                        self.assertNotIn('class="it-sidebar"', html)
+                    self.assertEqual(ticket.status, status)
+
     def test_upgrade_previous_head_preserves_rows(self):
         self.migrate("1e6b9640cdac")
         self.seed_legacy_ticket()

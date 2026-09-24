@@ -82,6 +82,5 @@ Không kết nối database trong cấu hình local của bạn. MySQL thực t�
 
 ## Các phần còn thiếu
 
-- `it_ticket_detail.html` chưa tồn tại dù route chi tiết Ticket của IT/Admin đang gọi template này.
-- `base_it.html` chưa tồn tại; dashboard tiếp tục dùng `base.html`.
+- Trang IT/Admin và User dùng chung nội dung chi tiết Ticket; IT/Admin dùng layout `base_it.html`.
 - Admin, quản lý Category/User/Role, Knowledge Base và AI chưa được bổ sung trong đợt sửa cấu trúc.

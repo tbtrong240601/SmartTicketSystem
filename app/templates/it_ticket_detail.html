@@ -1,0 +1,12 @@
+{% extends "base_it.html" %}
+
+{% block title %}Ticket #{{ ticket.id }} - SmartTicket{% endblock %}
+{% block header_title %}Chi tiết Ticket #{{ ticket.id }}{% endblock %}
+
+{% block content %}
+<section class="card">
+  <div class="card-body">
+    {% include "_ticket_detail_content.html" %}
+  </div>
+</section>
+{% endblock %}
