@@ -1,3 +1,8 @@
+import truststore
+
+# Use the operating system trust store while keeping HTTPS verification enabled.
+truststore.inject_into_ssl()
+
 from flask import Flask, render_template
 from config import Config
 from app.extensions import db, login_manager, migrate, csrf

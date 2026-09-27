@@ -8,7 +8,7 @@
 - **IT Support:** tiếp nhận, chuyển phiếu, nhập phương án xử lý, chờ xác nhận rồi đóng Ticket; viết bài nháp Knowledge Base.
 - **Admin:** dashboard, thống kê 7 ngày, khối lượng nhân viên, xuất CSV, quản lý danh mục, tạo tài khoản/đổi vai trò/khóa tài khoản/đặt lại mật khẩu; duyệt bài viết; xem nhật ký.
 - **Knowledge Base:** tìm kiếm, lọc danh mục, bản nháp/xuất bản, tạo bản nháp từ phương án Ticket; chỉ bài đã xuất bản được dùng cho trợ lý.
-- **AI:** truy xuất 3 bài liên quan bằng từ khóa tiếng Việt bỏ dấu; gọi Groq khi có khóa và người dùng cho phép gửi câu hỏi. Không có khóa hoặc dịch vụ lỗi thì hiển thị tra cứu nội bộ có nhãn rõ ràng.
+- **AI:** truy xuất 3 bài liên quan bằng BM25 trên từ khóa tiếng Việt bỏ dấu; gọi Groq khi có khóa và người dùng cho phép gửi câu hỏi. Không có khóa hoặc dịch vụ lỗi thì hiển thị tra cứu nội bộ có nhãn rõ ràng.
 
 ## Chạy nhanh trên máy Windows hiện tại
 
@@ -49,7 +49,7 @@ Lệnh `create-admin` hỏi mật khẩu, không có tài khoản/mật khẩu m
 | SQLALCHEMY_DATABASE_URI | URI ưu tiên, ví dụ `mysql+pymysql://USER:PASSWORD@localhost/smart_ticket_db` |
 | DATABASE_URL | URI dự phòng nếu biến trên trống |
 | GROQ_API_KEY | Khóa Groq; để trống để chỉ tra cứu nội bộ |
-| GROQ_MODEL | Mặc định `llama-3.3-70b-versatile`, có thể thay theo tài khoản |
+| GROQ_MODEL | Mặc định `openai/gpt-oss-20b`, có thể thay theo tài khoản |
 | COOKIE_SECURE | `true` khi triển khai HTTPS; local HTTP dùng `false` |
 
 `.env` được nạp từ thư mục dự án, không ghi đè biến môi trường đã đặt. `.env` không được đưa vào Git. Mật khẩu có ký tự đặc biệt trong URI phải URL-encode. Fallback MySQL local giữ như dự án gốc; không dùng tài khoản root không mật khẩu để triển khai công khai.
@@ -96,3 +96,7 @@ Tests tự tạo SQLite tạm, không dùng database thật. Bao phủ migration
 Đây là bản ứng dụng local phục vụ demo/báo cáo. Chưa tích hợp email, tệp đính kèm, SSO/MFA, giám sát SLA hoặc triển khai Internet. Tìm kiếm AI là lexical retrieval, không phải vector database, fine-tuning hay model tự huấn luyện. Bộ đếm đăng nhập sai nằm trong một tiến trình; nếu chạy nhiều tiến trình/máy cần bộ đếm chung. Chưa benchmark tải đồng thời. Nhật ký bắt đầu từ phiên bản mới, không tái tạo lịch sử cũ. Thời gian lưu/hiển thị UTC.
 
 Tài liệu báo cáo và kịch bản demo nằm trong `docs/`.
+
+## Đánh giá phục vụ đồ án
+
+Chạy `python evaluation/run.py` để so sánh cách tìm kiếm cũ và BM25 trên dữ liệu mô phỏng. Xem [quy trình đánh giá](evaluation/README.md) và [kế hoạch hoàn thiện 3 ngày](docs/THESIS_READINESS.md). Không cần API key hoặc kết nối database.

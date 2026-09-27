@@ -182,6 +182,24 @@ class FeatureTests(unittest.TestCase):
         self.client.post("/account", data={"old_password":"password123", "password":"replacement123"})
         self.assertTrue(self.people["owner"].check_password("replacement123"))
 
+    def test_ai_error_diagnostics_do_not_log_secrets(self):
+        self.app.config["GROQ_API_KEY"] = "test-key"
+        failures = [(requests.exceptions.SSLError("SECRET-PROVIDER-BODY"), "tls"),
+                    (requests.Timeout("SECRET-PROVIDER-BODY"), "timeout")]
+        for status in (401, 403, 404, 429, 500):
+            response = requests.Response()
+            response.status_code = status
+            failures.append((requests.HTTPError("SECRET-PROVIDER-BODY", response=response), f"http_{status}"))
+        for error, reason in failures:
+            with self.subTest(reason=reason):
+                with patch("app.services.ai.requests.post", side_effect=error):
+                    with self.assertLogs(self.app.logger, level="WARNING") as logs:
+                        result = answer("Wi-Fi", [self.article], True)
+                self.assertEqual(result["mode"], "fallback")
+                self.assertIn(reason, " ".join(logs.output))
+                self.assertNotIn("SECRET-PROVIDER-BODY", str(result) + str(logs.output))
+                self.assertNotIn("test-key", str(result) + str(logs.output))
+
     def test_ai_requires_opt_in_and_sources(self):
         self.app.config["GROQ_API_KEY"] = "test-key"
         with patch("app.services.ai.requests.post") as provider:

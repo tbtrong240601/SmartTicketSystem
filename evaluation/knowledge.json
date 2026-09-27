@@ -1,0 +1,162 @@
+[
+  {
+    "id": 1,
+    "slug": "wifi",
+    "title": "Kết nối Wi-Fi không thành công",
+    "category": "Mạng",
+    "content": "Kiểm tra Wi-Fi đã bật và chế độ máy bay đã tắt. Chọn đúng tên mạng được đơn vị cho phép. Thử ngắt rồi kết nối lại mạng. So sánh với một thiết bị khác tại cùng vị trí. Nếu lỗi còn xảy ra, gửi IT tên mạng, thời điểm và thông báo lỗi; không gửi mật khẩu.",
+    "provenance": "Tình huống minh họa do nhóm phát triển biên soạn; cần người phụ trách IT duyệt trước khi xuất bản."
+  },
+  {
+    "id": 2,
+    "slug": "dns",
+    "title": "Trình duyệt báo lỗi DNS khi truy cập website",
+    "category": "Mạng",
+    "content": "Ghi lại tên miền và thông báo DNS. Thử một website khác để xác định phạm vi. Kiểm tra kết nối Internet bằng thiết bị khác. Nếu chỉ một tên miền lỗi, gửi IT tên miền và thời điểm. Không tự đổi DNS của công ty hoặc bỏ qua cảnh báo chứng chỉ.",
+    "provenance": "Tình huống minh họa do nhóm phát triển biên soạn; cần người phụ trách IT duyệt trước khi xuất bản."
+  },
+  {
+    "id": 3,
+    "slug": "vpn",
+    "title": "VPN không kết nối khi làm việc từ xa",
+    "category": "Mạng",
+    "content": "Kiểm tra Internet trước khi mở VPN. Dùng ứng dụng VPN và cấu hình do IT cấp. Kiểm tra ngày giờ thiết bị và thông báo xác thực. Ghi lại mã lỗi, thời điểm và phiên bản ứng dụng để gửi IT. Không chia sẻ mã OTP hay dùng dịch vụ VPN công cộng thay thế.",
+    "provenance": "Tình huống minh họa do nhóm phát triển biên soạn; cần người phụ trách IT duyệt trước khi xuất bản."
+  },
+  {
+    "id": 4,
+    "slug": "printqueue",
+    "title": "Máy in không nhận lệnh và hàng đợi bị kẹt",
+    "category": "Thiết bị",
+    "content": "Kiểm tra nguồn, trạng thái máy in và kết nối. Chọn đúng máy in trong hộp thoại in. Xem hàng đợi có tác vụ bị treo; chỉ hủy tác vụ của mình khi được phép. Thử in trang kiểm tra. Nếu chưa được, ghi lại tên máy in và lỗi gửi IT; không tự cài driver không rõ nguồn.",
+    "provenance": "Tình huống minh họa do nhóm phát triển biên soạn; cần người phụ trách IT duyệt trước khi xuất bản."
+  },
+  {
+    "id": 5,
+    "slug": "printerpaper",
+    "title": "Máy in báo hết giấy hoặc kẹt giấy",
+    "category": "Thiết bị",
+    "content": "Đọc thông báo trên màn hình máy in. Bổ sung đúng loại giấy và chỉnh khay theo hướng dẫn thiết bị. Với kẹt giấy, chỉ mở vị trí được hướng dẫn; không dùng lực kéo hoặc chạm bộ phận nóng. Nếu không thao tác an toàn được, dừng lại và gọi IT.",
+    "provenance": "Tình huống minh họa do nhóm phát triển biên soạn; cần người phụ trách IT duyệt trước khi xuất bản."
+  },
+  {
+    "id": 6,
+    "slug": "account",
+    "title": "Tài khoản đăng nhập bị khóa hoặc quên mật khẩu",
+    "category": "Tài khoản",
+    "content": "Kiểm tra đúng tên đăng nhập và Caps Lock. Nếu quên mật khẩu, dùng trang khôi phục chính thức của đơn vị. Nếu tài khoản bị khóa, ngừng thử liên tục và liên hệ IT theo quy trình xác minh danh tính. Không gửi mật khẩu hoặc mã khôi phục trong Ticket.",
+    "provenance": "Tình huống minh họa do nhóm phát triển biên soạn; cần người phụ trách IT duyệt trước khi xuất bản."
+  },
+  {
+    "id": 7,
+    "slug": "mfa",
+    "title": "Không nhận được mã xác thực MFA hoặc OTP",
+    "category": "Tài khoản",
+    "content": "Kiểm tra đúng phương thức xác thực đã đăng ký và giờ trên điện thoại. Kiểm tra thông báo ứng dụng xác thực hoặc kết nối di động. Nếu mất điện thoại, báo IT để thực hiện quy trình khôi phục danh tính. Không chấp nhận yêu cầu đăng nhập lạ hoặc chia sẻ OTP.",
+    "provenance": "Tình huống minh họa do nhóm phát triển biên soạn; cần người phụ trách IT duyệt trước khi xuất bản."
+  },
+  {
+    "id": 8,
+    "slug": "emailquota",
+    "title": "Hộp thư đầy, không nhận được email mới",
+    "category": "Email",
+    "content": "Kiểm tra thông báo hạn mức dung lượng hộp thư. Xác định thư có tệp đính kèm lớn. Lưu trữ theo chính sách của đơn vị, không tự xóa thư nghiệp vụ cần lưu. Gửi IT thông báo quota nếu cần hỗ trợ dung lượng hoặc khôi phục nhận thư.",
+    "provenance": "Tình huống minh họa do nhóm phát triển biên soạn; cần người phụ trách IT duyệt trước khi xuất bản."
+  },
+  {
+    "id": 9,
+    "slug": "phishing",
+    "title": "Nhận email đáng ngờ yêu cầu cung cấp mật khẩu",
+    "category": "Email",
+    "content": "Không bấm liên kết hoặc mở tệp trong thư đáng ngờ. Kiểm tra địa chỉ người gửi và xác minh qua kênh liên hệ đã biết. Báo IT theo quy trình của đơn vị. Nếu đã nhập mật khẩu vào trang lạ, báo ngay để xử lý và đổi mật khẩu qua trang chính thức.",
+    "provenance": "Tình huống minh họa do nhóm phát triển biên soạn; cần người phụ trách IT duyệt trước khi xuất bản."
+  },
+  {
+    "id": 10,
+    "slug": "audio",
+    "title": "Không nghe hoặc nói được trong cuộc họp trực tuyến",
+    "category": "Ứng dụng",
+    "content": "Kiểm tra đúng loa và micro trong cài đặt cuộc họp. Kiểm tra nút tắt tiếng của ứng dụng và tai nghe. Kiểm tra quyền micro của hệ điều hành. Thử chức năng gọi kiểm tra nếu có; không ghi âm người khác khi chưa được phép. Nếu còn lỗi, gửi IT tên thiết bị và ứng dụng.",
+    "provenance": "Tình huống minh họa do nhóm phát triển biên soạn; cần người phụ trách IT duyệt trước khi xuất bản."
+  },
+  {
+    "id": 11,
+    "slug": "camera",
+    "title": "Camera không hiển thị trong cuộc họp",
+    "category": "Ứng dụng",
+    "content": "Kiểm tra nắp che camera và nút bật camera. Chọn đúng camera trong ứng dụng. Kiểm tra quyền truy cập camera; đóng ứng dụng khác đang sử dụng thiết bị. Nếu vẫn lỗi, ghi lại thông báo gửi IT; không cài driver từ website lạ.",
+    "provenance": "Tình huống minh họa do nhóm phát triển biên soạn; cần người phụ trách IT duyệt trước khi xuất bản."
+  },
+  {
+    "id": 12,
+    "slug": "slowpc",
+    "title": "Máy tính chạy chậm khi mở nhiều ứng dụng",
+    "category": "Máy tính",
+    "content": "Lưu công việc trước khi đóng ứng dụng không cần thiết. Kiểm tra CPU và bộ nhớ trong trình quản lý tác vụ, ghi lại ứng dụng sử dụng cao. Khởi động lại khi thuận tiện và đã lưu dữ liệu. Nếu bất thường kéo dài, báo IT; không cài công cụ tăng tốc không rõ nguồn.",
+    "provenance": "Tình huống minh họa do nhóm phát triển biên soạn; cần người phụ trách IT duyệt trước khi xuất bản."
+  },
+  {
+    "id": 13,
+    "slug": "storage",
+    "title": "Ổ đĩa gần đầy, không đủ dung lượng lưu tệp",
+    "category": "Máy tính",
+    "content": "Kiểm tra dung lượng còn trống và vị trí lưu. Xác định tệp cá nhân lớn; chỉ chuyển sang nơi lưu được đơn vị cho phép sau khi kiểm tra bản sao. Không xóa thư mục hệ thống hoặc dữ liệu nghiệp vụ chưa được phê duyệt. Báo IT khi cần mở rộng dung lượng.",
+    "provenance": "Tình huống minh họa do nhóm phát triển biên soạn; cần người phụ trách IT duyệt trước khi xuất bản."
+  },
+  {
+    "id": 14,
+    "slug": "updates",
+    "title": "Cập nhật Windows bị lỗi hoặc yêu cầu khởi động lại",
+    "category": "Máy tính",
+    "content": "Lưu tài liệu và kiểm tra kết nối nguồn trước khi khởi động lại theo thông báo cập nhật. Ghi lại mã lỗi cập nhật nếu có. Không tắt cưỡng bức máy trong khi đang cập nhật. Liên hệ IT khi cập nhật thất bại lặp lại hoặc máy không khởi động được.",
+    "provenance": "Tình huống minh họa do nhóm phát triển biên soạn; cần người phụ trách IT duyệt trước khi xuất bản."
+  },
+  {
+    "id": 15,
+    "slug": "install",
+    "title": "Yêu cầu cài phần mềm phục vụ công việc",
+    "category": "Ứng dụng",
+    "content": "Cung cấp tên phần mềm, phiên bản và mục đích sử dụng trong Ticket. IT kiểm tra nguồn tải, giấy phép và tính tương thích trước khi cài. Không dùng phần mềm bẻ khóa hoặc cung cấp mật khẩu quản trị cho người khác. Chờ phê duyệt theo quy trình của đơn vị.",
+    "provenance": "Tình huống minh họa do nhóm phát triển biên soạn; cần người phụ trách IT duyệt trước khi xuất bản."
+  },
+  {
+    "id": 16,
+    "slug": "fileshare",
+    "title": "Không truy cập được thư mục chia sẻ",
+    "category": "Dữ liệu",
+    "content": "Kiểm tra đường dẫn thư mục và kết nối mạng nội bộ hoặc VPN. Ghi lại lỗi Access denied hay không tìm thấy đường dẫn. Chủ sở hữu dữ liệu và IT cần xác nhận quyền phù hợp. Không dùng tài khoản của đồng nghiệp để truy cập thay.",
+    "provenance": "Tình huống minh họa do nhóm phát triển biên soạn; cần người phụ trách IT duyệt trước khi xuất bản."
+  },
+  {
+    "id": 17,
+    "slug": "restore",
+    "title": "Khôi phục tệp đã xóa nhầm",
+    "category": "Dữ liệu",
+    "content": "Ngừng ghi đè hoặc tạo thêm dữ liệu tại vị trí bị mất nếu nghi mất dữ liệu quan trọng. Kiểm tra thùng rác và lịch sử phiên bản nếu được hệ thống hỗ trợ. Gửi IT tên tệp, vị trí, thời điểm còn thấy tệp và thời điểm xóa. Không tự cài phần mềm cứu dữ liệu vào ổ đang cần khôi phục.",
+    "provenance": "Tình huống minh họa do nhóm phát triển biên soạn; cần người phụ trách IT duyệt trước khi xuất bản."
+  },
+  {
+    "id": 18,
+    "slug": "excel",
+    "title": "Excel không mở được tệp hoặc báo Protected View",
+    "category": "Ứng dụng",
+    "content": "Kiểm tra nguồn tệp và phần mở rộng. Thử mở một tệp tin cậy khác để xác định lỗi nằm ở tệp hay ứng dụng. Không bật macro hoặc bỏ chế độ bảo vệ đối với tệp không rõ nguồn. Gửi IT nội dung thông báo lỗi, không gửi bảng tính chứa dữ liệu nhạy cảm qua kênh không được phép.",
+    "provenance": "Tình huống minh họa do nhóm phát triển biên soạn; cần người phụ trách IT duyệt trước khi xuất bản."
+  },
+  {
+    "id": 19,
+    "slug": "monitor",
+    "title": "Màn hình ngoài không nhận tín hiệu",
+    "category": "Thiết bị",
+    "content": "Kiểm tra nguồn màn hình, dây tín hiệu và cổng kết nối. Chọn đúng đầu vào trên màn hình. Kiểm tra chế độ hiển thị của máy tính. Thử dây hoặc cổng khác nếu có sẵn và được phép. Nếu vẫn báo No signal, ghi lại thiết bị và kết nối để gửi IT.",
+    "provenance": "Tình huống minh họa do nhóm phát triển biên soạn; cần người phụ trách IT duyệt trước khi xuất bản."
+  },
+  {
+    "id": 20,
+    "slug": "usb",
+    "title": "Thiết bị USB không được nhận diện",
+    "category": "Thiết bị",
+    "content": "Chỉ cắm thiết bị USB có nguồn gốc rõ ràng và được chính sách đơn vị cho phép. Thử cổng khác nếu thiết bị không phản hồi. Ghi lại thông báo không nhận diện gửi IT. Không định dạng USB khi còn dữ liệu cần giữ và không cắm thiết bị nhặt được để kiểm tra.",
+    "provenance": "Tình huống minh họa do nhóm phát triển biên soạn; cần người phụ trách IT duyệt trước khi xuất bản."
+  }
+]

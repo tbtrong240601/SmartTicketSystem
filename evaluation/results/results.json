@@ -1,0 +1,1936 @@
+{
+  "run_utc": "2026-09-26T17:03:46.896694+00:00",
+  "dataset_sha256": {
+    "knowledge.json": "4b737fa2600cca73e8768d161bd4626cd9fff96b4a666d0229b496df9ac70129",
+    "questions.json": "74747b2a151a0f1543cd1b55788c710f15a04c151f6ca82fb86b20927c044a97"
+  },
+  "limitations": "Synthetic developer-authored scenarios and labels, not an independent real-user benchmark. Retrieval metrics do not measure generated answer correctness. Timing excludes database/API/network.",
+  "summaries": {
+    "baseline": {
+      "development": {
+        "answerable_count": 20,
+        "negative_count": 0,
+        "hit_at_1": 1,
+        "hit_at_3": 1,
+        "mrr_at_3": 1.0,
+        "negative_abstention_rate": null,
+        "median_retrieval_ms": 1.1248499999965134
+      },
+      "evaluation": {
+        "answerable_count": 20,
+        "negative_count": 8,
+        "hit_at_1": 0.4,
+        "hit_at_3": 0.6,
+        "mrr_at_3": 0.5,
+        "negative_abstention_rate": 0,
+        "median_retrieval_ms": 1.1411000000407512
+      }
+    },
+    "bm25": {
+      "development": {
+        "answerable_count": 20,
+        "negative_count": 0,
+        "hit_at_1": 1,
+        "hit_at_3": 1,
+        "mrr_at_3": 1.0,
+        "negative_abstention_rate": null,
+        "median_retrieval_ms": 1.4678000002277258
+      },
+      "evaluation": {
+        "answerable_count": 20,
+        "negative_count": 8,
+        "hit_at_1": 0.55,
+        "hit_at_3": 0.8,
+        "mrr_at_3": 0.6666666666666666,
+        "negative_abstention_rate": 0,
+        "median_retrieval_ms": 1.432349999959115
+      }
+    }
+  },
+  "cases": [
+    {
+      "id": "D01",
+      "split": "development",
+      "question": "Không kết nối được Wi-Fi thì kiểm tra gì?",
+      "relevant_ids": [
+        1
+      ],
+      "kind": "direct",
+      "method": "baseline",
+      "retrieved_ids": [
+        1,
+        3,
+        4
+      ],
+      "hit_at_1": 1,
+      "hit_at_3": 1,
+      "reciprocal_rank": 1.0,
+      "abstained": 0,
+      "median_ms": 1.1772999996537692
+    },
+    {
+      "id": "E01",
+      "split": "evaluation",
+      "question": "Laptop không bắt được mạng không dây trong phòng họp.",
+      "relevant_ids": [
+        1
+      ],
+      "kind": "paraphrase",
+      "method": "baseline",
+      "retrieved_ids": [
+        11,
+        10,
+        8
+      ],
+      "hit_at_1": 0,
+      "hit_at_3": 0,
+      "reciprocal_rank": 0,
+      "abstained": 0,
+      "median_ms": 1.153100000010454
+    },
+    {
+      "id": "D02",
+      "split": "development",
+      "question": "Trình duyệt báo DNS khi mở website.",
+      "relevant_ids": [
+        2
+      ],
+      "kind": "direct",
+      "method": "baseline",
+      "retrieved_ids": [
+        2,
+        18,
+        12
+      ],
+      "hit_at_1": 1,
+      "hit_at_3": 1,
+      "reciprocal_rank": 1.0,
+      "abstained": 0,
+      "median_ms": 1.2075000004188041
+    },
+    {
+      "id": "E02",
+      "split": "evaluation",
+      "question": "Internet vẫn dùng được nhưng trang nội bộ báo không phân giải được tên miền.",
+      "relevant_ids": [
+        2
+      ],
+      "kind": "paraphrase",
+      "method": "baseline",
+      "retrieved_ids": [
+        2,
+        18,
+        5
+      ],
+      "hit_at_1": 1,
+      "hit_at_3": 1,
+      "reciprocal_rank": 1.0,
+      "abstained": 0,
+      "median_ms": 1.1010000007445342
+    },
+    {
+      "id": "D03",
+      "split": "development",
+      "question": "VPN không kết nối được.",
+      "relevant_ids": [
+        3
+      ],
+      "kind": "direct",
+      "method": "baseline",
+      "retrieved_ids": [
+        3,
+        1,
+        4
+      ],
+      "hit_at_1": 1,
+      "hit_at_3": 1,
+      "reciprocal_rank": 1.0,
+      "abstained": 0,
+      "median_ms": 1.1800000002040179
+    },
+    {
+      "id": "E03",
+      "split": "evaluation",
+      "question": "Làm việc ở nhà, ứng dụng kết nối mạng riêng của công ty báo lỗi xác thực.",
+      "relevant_ids": [
+        3
+      ],
+      "kind": "paraphrase",
+      "method": "baseline",
+      "retrieved_ids": [
+        3,
+        1,
+        7
+      ],
+      "hit_at_1": 1,
+      "hit_at_3": 1,
+      "reciprocal_rank": 1.0,
+      "abstained": 0,
+      "median_ms": 1.135200000135228
+    },
+    {
+      "id": "D04",
+      "split": "development",
+      "question": "Máy in không nhận lệnh, hàng đợi bị kẹt.",
+      "relevant_ids": [
+        4
+      ],
+      "kind": "direct",
+      "method": "baseline",
+      "retrieved_ids": [
+        4,
+        5,
+        19
+      ],
+      "hit_at_1": 1,
+      "hit_at_3": 1,
+      "reciprocal_rank": 1.0,
+      "abstained": 0,
+      "median_ms": 1.1359000000084052
+    },
+    {
+      "id": "E04",
+      "split": "evaluation",
+      "question": "Bấm Print nhưng tài liệu nằm mãi trong danh sách chờ, giấy không ra.",
+      "relevant_ids": [
+        4
+      ],
+      "kind": "paraphrase",
+      "method": "baseline",
+      "retrieved_ids": [
+        6,
+        10,
+        11
+      ],
+      "hit_at_1": 0,
+      "hit_at_3": 0,
+      "reciprocal_rank": 0,
+      "abstained": 0,
+      "median_ms": 1.185799999802839
+    },
+    {
+      "id": "D05",
+      "split": "development",
+      "question": "Máy in báo kẹt giấy.",
+      "relevant_ids": [
+        5
+      ],
+      "kind": "direct",
+      "method": "baseline",
+      "retrieved_ids": [
+        5,
+        4,
+        1
+      ],
+      "hit_at_1": 1,
+      "hit_at_3": 1,
+      "reciprocal_rank": 1.0,
+      "abstained": 0,
+      "median_ms": 1.183600000331353
+    },
+    {
+      "id": "E05",
+      "split": "evaluation",
+      "question": "Tờ giấy mắc bên trong thiết bị in, tôi có nên kéo mạnh không?",
+      "relevant_ids": [
+        5
+      ],
+      "kind": "paraphrase",
+      "method": "baseline",
+      "retrieved_ids": [
+        5,
+        11,
+        10
+      ],
+      "hit_at_1": 1,
+      "hit_at_3": 1,
+      "reciprocal_rank": 1.0,
+      "abstained": 0,
+      "median_ms": 1.1529000003065448
+    },
+    {
+      "id": "D06",
+      "split": "development",
+      "question": "Tài khoản bị khóa, tôi quên mật khẩu.",
+      "relevant_ids": [
+        6
+      ],
+      "kind": "direct",
+      "method": "baseline",
+      "retrieved_ids": [
+        6,
+        9,
+        15
+      ],
+      "hit_at_1": 1,
+      "hit_at_3": 1,
+      "reciprocal_rank": 1.0,
+      "abstained": 0,
+      "median_ms": 1.1109999995824182
+    },
+    {
+      "id": "E06",
+      "split": "evaluation",
+      "question": "Tôi không nhớ thông tin bí mật để vào tài khoản làm việc, cần khôi phục quyền truy cập.",
+      "relevant_ids": [
+        6
+      ],
+      "kind": "paraphrase",
+      "method": "baseline",
+      "retrieved_ids": [
+        6,
+        17,
+        16
+      ],
+      "hit_at_1": 1,
+      "hit_at_3": 1,
+      "reciprocal_rank": 1.0,
+      "abstained": 0,
+      "median_ms": 1.2483999998949002
+    },
+    {
+      "id": "D07",
+      "split": "development",
+      "question": "Không nhận được OTP để đăng nhập.",
+      "relevant_ids": [
+        7
+      ],
+      "kind": "direct",
+      "method": "baseline",
+      "retrieved_ids": [
+        7,
+        9,
+        6
+      ],
+      "hit_at_1": 1,
+      "hit_at_3": 1,
+      "reciprocal_rank": 1.0,
+      "abstained": 0,
+      "median_ms": 1.1031000003640656
+    },
+    {
+      "id": "E07",
+      "split": "evaluation",
+      "question": "Ứng dụng xác thực hai bước trên điện thoại không hiện mã để vào hệ thống.",
+      "relevant_ids": [
+        7
+      ],
+      "kind": "paraphrase",
+      "method": "baseline",
+      "retrieved_ids": [
+        7,
+        12,
+        13
+      ],
+      "hit_at_1": 1,
+      "hit_at_3": 1,
+      "reciprocal_rank": 1.0,
+      "abstained": 0,
+      "median_ms": 1.113199999963399
+    },
+    {
+      "id": "D08",
+      "split": "development",
+      "question": "Hộp thư đầy không nhận email mới.",
+      "relevant_ids": [
+        8
+      ],
+      "kind": "direct",
+      "method": "baseline",
+      "retrieved_ids": [
+        8,
+        9,
+        16
+      ],
+      "hit_at_1": 1,
+      "hit_at_3": 1,
+      "reciprocal_rank": 1.0,
+      "abstained": 0,
+      "median_ms": 1.1994999995295075
+    },
+    {
+      "id": "E08",
+      "split": "evaluation",
+      "question": "Outlook báo mailbox quota exceeded, đối tác gửi thư bị trả lại.",
+      "relevant_ids": [
+        8
+      ],
+      "kind": "paraphrase",
+      "method": "baseline",
+      "retrieved_ids": [
+        4,
+        2,
+        18
+      ],
+      "hit_at_1": 0,
+      "hit_at_3": 0,
+      "reciprocal_rank": 0,
+      "abstained": 0,
+      "median_ms": 1.1192000001756242
+    },
+    {
+      "id": "D09",
+      "split": "development",
+      "question": "Email lạ yêu cầu nhập mật khẩu.",
+      "relevant_ids": [
+        9
+      ],
+      "kind": "direct",
+      "method": "baseline",
+      "retrieved_ids": [
+        9,
+        6,
+        15
+      ],
+      "hit_at_1": 1,
+      "hit_at_3": 1,
+      "reciprocal_rank": 1.0,
+      "abstained": 0,
+      "median_ms": 1.1181999998370884
+    },
+    {
+      "id": "E09",
+      "split": "evaluation",
+      "question": "Có thư giả danh giám đốc bắt bấm link xác minh tài khoản, tôi nên làm gì?",
+      "relevant_ids": [
+        9
+      ],
+      "kind": "paraphrase",
+      "method": "baseline",
+      "retrieved_ids": [
+        6,
+        16,
+        8
+      ],
+      "hit_at_1": 0,
+      "hit_at_3": 0,
+      "reciprocal_rank": 0,
+      "abstained": 0,
+      "median_ms": 1.1148000003231573
+    },
+    {
+      "id": "D10",
+      "split": "development",
+      "question": "Không nghe được âm thanh cuộc họp và micro không hoạt động.",
+      "relevant_ids": [
+        10
+      ],
+      "kind": "direct",
+      "method": "baseline",
+      "retrieved_ids": [
+        10,
+        11,
+        14
+      ],
+      "hit_at_1": 1,
+      "hit_at_3": 1,
+      "reciprocal_rank": 1.0,
+      "abstained": 0,
+      "median_ms": 1.1905999999726191
+    },
+    {
+      "id": "E10",
+      "split": "evaluation",
+      "question": "Đồng nghiệp không nghe tiếng tôi khi họp Teams dù tai nghe đã cắm.",
+      "relevant_ids": [
+        10
+      ],
+      "kind": "paraphrase",
+      "method": "baseline",
+      "retrieved_ids": [
+        10,
+        16,
+        14
+      ],
+      "hit_at_1": 1,
+      "hit_at_3": 1,
+      "reciprocal_rank": 1.0,
+      "abstained": 0,
+      "median_ms": 1.1469999999462743
+    },
+    {
+      "id": "D11",
+      "split": "development",
+      "question": "Camera không hiển thị trong cuộc họp.",
+      "relevant_ids": [
+        11
+      ],
+      "kind": "direct",
+      "method": "baseline",
+      "retrieved_ids": [
+        11,
+        10,
+        8
+      ],
+      "hit_at_1": 1,
+      "hit_at_3": 1,
+      "reciprocal_rank": 1.0,
+      "abstained": 0,
+      "median_ms": 1.0580999996818719
+    },
+    {
+      "id": "E11",
+      "split": "evaluation",
+      "question": "Webcam chỉ hiện màn hình đen khi tôi bật video trong Teams.",
+      "relevant_ids": [
+        11
+      ],
+      "kind": "paraphrase",
+      "method": "baseline",
+      "retrieved_ids": [
+        19,
+        11,
+        10
+      ],
+      "hit_at_1": 0,
+      "hit_at_3": 1,
+      "reciprocal_rank": 0.5,
+      "abstained": 0,
+      "median_ms": 1.2750000005326
+    },
+    {
+      "id": "D12",
+      "split": "development",
+      "question": "Máy tính chạy chậm khi mở nhiều ứng dụng.",
+      "relevant_ids": [
+        12
+      ],
+      "kind": "direct",
+      "method": "baseline",
+      "retrieved_ids": [
+        12,
+        18,
+        5
+      ],
+      "hit_at_1": 1,
+      "hit_at_3": 1,
+      "reciprocal_rank": 1.0,
+      "abstained": 0,
+      "median_ms": 1.1205999999219785
+    },
+    {
+      "id": "E12",
+      "split": "evaluation",
+      "question": "Laptop phản hồi rất lâu, RAM và CPU thường xuyên lên cao.",
+      "relevant_ids": [
+        12
+      ],
+      "kind": "paraphrase",
+      "method": "baseline",
+      "retrieved_ids": [
+        15,
+        12,
+        20
+      ],
+      "hit_at_1": 0,
+      "hit_at_3": 1,
+      "reciprocal_rank": 0.5,
+      "abstained": 0,
+      "median_ms": 1.1304999998174026
+    },
+    {
+      "id": "D13",
+      "split": "development",
+      "question": "Ổ đĩa đầy, không đủ chỗ lưu tệp.",
+      "relevant_ids": [
+        13
+      ],
+      "kind": "direct",
+      "method": "baseline",
+      "retrieved_ids": [
+        13,
+        18,
+        17
+      ],
+      "hit_at_1": 1,
+      "hit_at_3": 1,
+      "reciprocal_rank": 1.0,
+      "abstained": 0,
+      "median_ms": 1.1061999994126381
+    },
+    {
+      "id": "E13",
+      "split": "evaluation",
+      "question": "Windows báo low disk space trên ổ C, tôi cần giải phóng bộ nhớ lưu trữ.",
+      "relevant_ids": [
+        13
+      ],
+      "kind": "paraphrase",
+      "method": "baseline",
+      "retrieved_ids": [
+        5,
+        18,
+        14
+      ],
+      "hit_at_1": 0,
+      "hit_at_3": 0,
+      "reciprocal_rank": 0,
+      "abstained": 0,
+      "median_ms": 1.1811999993369682
+    },
+    {
+      "id": "D14",
+      "split": "development",
+      "question": "Cập nhật Windows thất bại.",
+      "relevant_ids": [
+        14
+      ],
+      "kind": "direct",
+      "method": "baseline",
+      "retrieved_ids": [
+        14,
+        16,
+        9
+      ],
+      "hit_at_1": 1,
+      "hit_at_3": 1,
+      "reciprocal_rank": 1.0,
+      "abstained": 0,
+      "median_ms": 1.0462999998708256
+    },
+    {
+      "id": "E14",
+      "split": "evaluation",
+      "question": "Windows Update liên tục báo cần restart sau bản vá và hiển thị mã lỗi.",
+      "relevant_ids": [
+        14
+      ],
+      "kind": "paraphrase",
+      "method": "baseline",
+      "retrieved_ids": [
+        14,
+        2,
+        18
+      ],
+      "hit_at_1": 1,
+      "hit_at_3": 1,
+      "reciprocal_rank": 1.0,
+      "abstained": 0,
+      "median_ms": 1.0731999991548946
+    },
+    {
+      "id": "D15",
+      "split": "development",
+      "question": "Tôi muốn cài phần mềm mới cho công việc.",
+      "relevant_ids": [
+        15
+      ],
+      "kind": "direct",
+      "method": "baseline",
+      "retrieved_ids": [
+        15,
+        3,
+        17
+      ],
+      "hit_at_1": 1,
+      "hit_at_3": 1,
+      "reciprocal_rank": 1.0,
+      "abstained": 0,
+      "median_ms": 1.1331999994581565
+    },
+    {
+      "id": "E15",
+      "split": "evaluation",
+      "question": "Ứng dụng cần quyền administrator để setup, tôi có nên tải bản crack không?",
+      "relevant_ids": [
+        15
+      ],
+      "kind": "paraphrase",
+      "method": "baseline",
+      "retrieved_ids": [
+        12,
+        13,
+        6
+      ],
+      "hit_at_1": 0,
+      "hit_at_3": 0,
+      "reciprocal_rank": 0,
+      "abstained": 0,
+      "median_ms": 1.0921000002781511
+    },
+    {
+      "id": "D16",
+      "split": "development",
+      "question": "Không mở được thư mục chia sẻ.",
+      "relevant_ids": [
+        16
+      ],
+      "kind": "direct",
+      "method": "baseline",
+      "retrieved_ids": [
+        16,
+        18,
+        8
+      ],
+      "hit_at_1": 1,
+      "hit_at_3": 1,
+      "reciprocal_rank": 1.0,
+      "abstained": 0,
+      "median_ms": 1.1397000007491442
+    },
+    {
+      "id": "E16",
+      "split": "evaluation",
+      "question": "Ổ mạng dùng chung báo Access denied dù đồng nghiệp vẫn vào được.",
+      "relevant_ids": [
+        16
+      ],
+      "kind": "paraphrase",
+      "method": "baseline",
+      "retrieved_ids": [
+        13,
+        16,
+        12
+      ],
+      "hit_at_1": 0,
+      "hit_at_3": 1,
+      "reciprocal_rank": 0.5,
+      "abstained": 0,
+      "median_ms": 1.1870999996972387
+    },
+    {
+      "id": "D17",
+      "split": "development",
+      "question": "Tôi xóa nhầm tệp, cần khôi phục.",
+      "relevant_ids": [
+        17
+      ],
+      "kind": "direct",
+      "method": "baseline",
+      "retrieved_ids": [
+        17,
+        13,
+        18
+      ],
+      "hit_at_1": 1,
+      "hit_at_3": 1,
+      "reciprocal_rank": 1.0,
+      "abstained": 0,
+      "median_ms": 1.0473000002093613
+    },
+    {
+      "id": "E17",
+      "split": "evaluation",
+      "question": "Lỡ xóa báo cáo hôm qua, có thể lấy lại từ bản sao lưu không?",
+      "relevant_ids": [
+        17
+      ],
+      "kind": "paraphrase",
+      "method": "baseline",
+      "retrieved_ids": [
+        13,
+        3,
+        2
+      ],
+      "hit_at_1": 0,
+      "hit_at_3": 0,
+      "reciprocal_rank": 0,
+      "abstained": 0,
+      "median_ms": 1.059000000168453
+    },
+    {
+      "id": "D18",
+      "split": "development",
+      "question": "Excel không mở được tệp và báo Protected View.",
+      "relevant_ids": [
+        18
+      ],
+      "kind": "direct",
+      "method": "baseline",
+      "retrieved_ids": [
+        18,
+        13,
+        5
+      ],
+      "hit_at_1": 1,
+      "hit_at_3": 1,
+      "reciprocal_rank": 1.0,
+      "abstained": 0,
+      "median_ms": 1.0832999996637227
+    },
+    {
+      "id": "E18",
+      "split": "evaluation",
+      "question": "Bảng tính nhận qua email yêu cầu Enable Content, tôi có nên bật macro không?",
+      "relevant_ids": [
+        18
+      ],
+      "kind": "paraphrase",
+      "method": "baseline",
+      "retrieved_ids": [
+        9,
+        15,
+        8
+      ],
+      "hit_at_1": 0,
+      "hit_at_3": 0,
+      "reciprocal_rank": 0,
+      "abstained": 0,
+      "median_ms": 1.0830999999598134
+    },
+    {
+      "id": "D19",
+      "split": "development",
+      "question": "Màn hình ngoài không nhận tín hiệu.",
+      "relevant_ids": [
+        19
+      ],
+      "kind": "direct",
+      "method": "baseline",
+      "retrieved_ids": [
+        19,
+        20,
+        8
+      ],
+      "hit_at_1": 1,
+      "hit_at_3": 1,
+      "reciprocal_rank": 1.0,
+      "abstained": 0,
+      "median_ms": 1.101300000300398
+    },
+    {
+      "id": "E19",
+      "split": "evaluation",
+      "question": "Cắm HDMI vào máy chiếu nhưng vẫn báo No signal.",
+      "relevant_ids": [
+        19
+      ],
+      "kind": "paraphrase",
+      "method": "baseline",
+      "retrieved_ids": [
+        5,
+        19,
+        18
+      ],
+      "hit_at_1": 0,
+      "hit_at_3": 1,
+      "reciprocal_rank": 0.5,
+      "abstained": 0,
+      "median_ms": 1.216799999383511
+    },
+    {
+      "id": "D20",
+      "split": "development",
+      "question": "Máy tính không nhận thiết bị USB.",
+      "relevant_ids": [
+        20
+      ],
+      "kind": "direct",
+      "method": "baseline",
+      "retrieved_ids": [
+        20,
+        12,
+        4
+      ],
+      "hit_at_1": 1,
+      "hit_at_3": 1,
+      "reciprocal_rank": 1.0,
+      "abstained": 0,
+      "median_ms": 1.1291000000710483
+    },
+    {
+      "id": "E20",
+      "split": "evaluation",
+      "question": "Cắm ổ flash thì báo USB device not recognized, có nên format luôn không?",
+      "relevant_ids": [
+        20
+      ],
+      "kind": "paraphrase",
+      "method": "baseline",
+      "retrieved_ids": [
+        20,
+        18,
+        5
+      ],
+      "hit_at_1": 1,
+      "hit_at_3": 1,
+      "reciprocal_rank": 1.0,
+      "abstained": 0,
+      "median_ms": 1.0658000001058099
+    },
+    {
+      "id": "N01",
+      "split": "evaluation",
+      "question": "Nấu phở bò như thế nào?",
+      "relevant_ids": [],
+      "kind": "out_of_scope",
+      "method": "baseline",
+      "retrieved_ids": [
+        18,
+        16,
+        12
+      ],
+      "hit_at_1": null,
+      "hit_at_3": null,
+      "reciprocal_rank": 0,
+      "abstained": 0,
+      "median_ms": 1.119999999900756
+    },
+    {
+      "id": "N02",
+      "split": "evaluation",
+      "question": "Tôi bị đau bụng nên uống thuốc gì?",
+      "relevant_ids": [],
+      "kind": "out_of_scope",
+      "method": "baseline",
+      "retrieved_ids": [
+        19
+      ],
+      "hit_at_1": null,
+      "hit_at_3": null,
+      "reciprocal_rank": 0,
+      "abstained": 0,
+      "median_ms": 1.1622000001807464
+    },
+    {
+      "id": "N03",
+      "split": "evaluation",
+      "question": "Dự đoán kết quả bóng đá tối nay",
+      "relevant_ids": [],
+      "kind": "out_of_scope",
+      "method": "baseline",
+      "retrieved_ids": [
+        13,
+        5,
+        4
+      ],
+      "hit_at_1": null,
+      "hit_at_3": null,
+      "reciprocal_rank": 0,
+      "abstained": 0,
+      "median_ms": 1.21579999995447
+    },
+    {
+      "id": "N04",
+      "split": "evaluation",
+      "question": "Hướng dẫn đầu tư chứng khoán",
+      "relevant_ids": [],
+      "kind": "out_of_scope",
+      "method": "baseline",
+      "retrieved_ids": [
+        6,
+        3,
+        16
+      ],
+      "hit_at_1": null,
+      "hit_at_3": null,
+      "reciprocal_rank": 0,
+      "abstained": 0,
+      "median_ms": 1.0925999995379243
+    },
+    {
+      "id": "N05",
+      "split": "evaluation",
+      "question": "Cách xin nghỉ phép năm trong công ty",
+      "relevant_ids": [],
+      "kind": "out_of_scope",
+      "method": "baseline",
+      "retrieved_ids": [
+        15,
+        10,
+        11
+      ],
+      "hit_at_1": null,
+      "hit_at_3": null,
+      "reciprocal_rank": 0,
+      "abstained": 0,
+      "median_ms": 1.1856000000989297
+    },
+    {
+      "id": "N06",
+      "split": "evaluation",
+      "question": "Mật khẩu Wi-Fi cụ thể của phòng giám đốc là gì?",
+      "relevant_ids": [],
+      "kind": "out_of_scope",
+      "method": "baseline",
+      "retrieved_ids": [
+        1,
+        9,
+        6
+      ],
+      "hit_at_1": null,
+      "hit_at_3": null,
+      "reciprocal_rank": 0,
+      "abstained": 0,
+      "median_ms": 1.0818999999173684
+    },
+    {
+      "id": "N07",
+      "split": "evaluation",
+      "question": "Số điện thoại riêng của trưởng phòng IT là bao nhiêu?",
+      "relevant_ids": [],
+      "kind": "out_of_scope",
+      "method": "baseline",
+      "retrieved_ids": [
+        20,
+        18,
+        12
+      ],
+      "hit_at_1": null,
+      "hit_at_3": null,
+      "reciprocal_rank": 0,
+      "abstained": 0,
+      "median_ms": 1.1563999996724306
+    },
+    {
+      "id": "N08",
+      "split": "evaluation",
+      "question": "Tài khoản ngân hàng của tôi bị khóa phải làm sao?",
+      "relevant_ids": [],
+      "kind": "out_of_scope",
+      "method": "baseline",
+      "retrieved_ids": [
+        6,
+        4,
+        3
+      ],
+      "hit_at_1": null,
+      "hit_at_3": null,
+      "reciprocal_rank": 0,
+      "abstained": 0,
+      "median_ms": 1.2425000004441245
+    },
+    {
+      "id": "D01",
+      "split": "development",
+      "question": "Không kết nối được Wi-Fi thì kiểm tra gì?",
+      "relevant_ids": [
+        1
+      ],
+      "kind": "direct",
+      "method": "bm25",
+      "retrieved_ids": [
+        1,
+        3,
+        19
+      ],
+      "hit_at_1": 1,
+      "hit_at_3": 1,
+      "reciprocal_rank": 1.0,
+      "abstained": 0,
+      "median_ms": 1.5913000006548828
+    },
+    {
+      "id": "E01",
+      "split": "evaluation",
+      "question": "Laptop không bắt được mạng không dây trong phòng họp.",
+      "relevant_ids": [
+        1
+      ],
+      "kind": "paraphrase",
+      "method": "bm25",
+      "retrieved_ids": [
+        8,
+        11,
+        1
+      ],
+      "hit_at_1": 0,
+      "hit_at_3": 1,
+      "reciprocal_rank": 0.3333333333333333,
+      "abstained": 0,
+      "median_ms": 1.4774000001125387
+    },
+    {
+      "id": "D02",
+      "split": "development",
+      "question": "Trình duyệt báo DNS khi mở website.",
+      "relevant_ids": [
+        2
+      ],
+      "kind": "direct",
+      "method": "bm25",
+      "retrieved_ids": [
+        2,
+        12,
+        13
+      ],
+      "hit_at_1": 1,
+      "hit_at_3": 1,
+      "reciprocal_rank": 1.0,
+      "abstained": 0,
+      "median_ms": 1.5261999997164821
+    },
+    {
+      "id": "E02",
+      "split": "evaluation",
+      "question": "Internet vẫn dùng được nhưng trang nội bộ báo không phân giải được tên miền.",
+      "relevant_ids": [
+        2
+      ],
+      "kind": "paraphrase",
+      "method": "bm25",
+      "retrieved_ids": [
+        2,
+        4,
+        5
+      ],
+      "hit_at_1": 1,
+      "hit_at_3": 1,
+      "reciprocal_rank": 1.0,
+      "abstained": 0,
+      "median_ms": 1.5088999998624786
+    },
+    {
+      "id": "D03",
+      "split": "development",
+      "question": "VPN không kết nối được.",
+      "relevant_ids": [
+        3
+      ],
+      "kind": "direct",
+      "method": "bm25",
+      "retrieved_ids": [
+        3,
+        16,
+        1
+      ],
+      "hit_at_1": 1,
+      "hit_at_3": 1,
+      "reciprocal_rank": 1.0,
+      "abstained": 0,
+      "median_ms": 1.3808000003336929
+    },
+    {
+      "id": "E03",
+      "split": "evaluation",
+      "question": "Làm việc ở nhà, ứng dụng kết nối mạng riêng của công ty báo lỗi xác thực.",
+      "relevant_ids": [
+        3
+      ],
+      "kind": "paraphrase",
+      "method": "bm25",
+      "retrieved_ids": [
+        3,
+        1,
+        7
+      ],
+      "hit_at_1": 1,
+      "hit_at_3": 1,
+      "reciprocal_rank": 1.0,
+      "abstained": 0,
+      "median_ms": 1.4430000001084409
+    },
+    {
+      "id": "D04",
+      "split": "development",
+      "question": "Máy in không nhận lệnh, hàng đợi bị kẹt.",
+      "relevant_ids": [
+        4
+      ],
+      "kind": "direct",
+      "method": "bm25",
+      "retrieved_ids": [
+        4,
+        5,
+        19
+      ],
+      "hit_at_1": 1,
+      "hit_at_3": 1,
+      "reciprocal_rank": 1.0,
+      "abstained": 0,
+      "median_ms": 1.4384000005520647
+    },
+    {
+      "id": "E04",
+      "split": "evaluation",
+      "question": "Bấm Print nhưng tài liệu nằm mãi trong danh sách chờ, giấy không ra.",
+      "relevant_ids": [
+        4
+      ],
+      "kind": "paraphrase",
+      "method": "bm25",
+      "retrieved_ids": [
+        6,
+        5,
+        1
+      ],
+      "hit_at_1": 0,
+      "hit_at_3": 0,
+      "reciprocal_rank": 0,
+      "abstained": 0,
+      "median_ms": 1.412700000400946
+    },
+    {
+      "id": "D05",
+      "split": "development",
+      "question": "Máy in báo kẹt giấy.",
+      "relevant_ids": [
+        5
+      ],
+      "kind": "direct",
+      "method": "bm25",
+      "retrieved_ids": [
+        5,
+        4,
+        1
+      ],
+      "hit_at_1": 1,
+      "hit_at_3": 1,
+      "reciprocal_rank": 1.0,
+      "abstained": 0,
+      "median_ms": 1.3641999994433718
+    },
+    {
+      "id": "E05",
+      "split": "evaluation",
+      "question": "Tờ giấy mắc bên trong thiết bị in, tôi có nên kéo mạnh không?",
+      "relevant_ids": [
+        5
+      ],
+      "kind": "paraphrase",
+      "method": "bm25",
+      "retrieved_ids": [
+        5,
+        4,
+        12
+      ],
+      "hit_at_1": 1,
+      "hit_at_3": 1,
+      "reciprocal_rank": 1.0,
+      "abstained": 0,
+      "median_ms": 1.446600000235776
+    },
+    {
+      "id": "D06",
+      "split": "development",
+      "question": "Tài khoản bị khóa, tôi quên mật khẩu.",
+      "relevant_ids": [
+        6
+      ],
+      "kind": "direct",
+      "method": "bm25",
+      "retrieved_ids": [
+        6,
+        15,
+        9
+      ],
+      "hit_at_1": 1,
+      "hit_at_3": 1,
+      "reciprocal_rank": 1.0,
+      "abstained": 0,
+      "median_ms": 1.6557999997530715
+    },
+    {
+      "id": "E06",
+      "split": "evaluation",
+      "question": "Tôi không nhớ thông tin bí mật để vào tài khoản làm việc, cần khôi phục quyền truy cập.",
+      "relevant_ids": [
+        6
+      ],
+      "kind": "paraphrase",
+      "method": "bm25",
+      "retrieved_ids": [
+        6,
+        16,
+        17
+      ],
+      "hit_at_1": 1,
+      "hit_at_3": 1,
+      "reciprocal_rank": 1.0,
+      "abstained": 0,
+      "median_ms": 1.8249000004288973
+    },
+    {
+      "id": "D07",
+      "split": "development",
+      "question": "Không nhận được OTP để đăng nhập.",
+      "relevant_ids": [
+        7
+      ],
+      "kind": "direct",
+      "method": "bm25",
+      "retrieved_ids": [
+        7,
+        6,
+        9
+      ],
+      "hit_at_1": 1,
+      "hit_at_3": 1,
+      "reciprocal_rank": 1.0,
+      "abstained": 0,
+      "median_ms": 1.705499999843596
+    },
+    {
+      "id": "E07",
+      "split": "evaluation",
+      "question": "Ứng dụng xác thực hai bước trên điện thoại không hiện mã để vào hệ thống.",
+      "relevant_ids": [
+        7
+      ],
+      "kind": "paraphrase",
+      "method": "bm25",
+      "retrieved_ids": [
+        7,
+        3,
+        11
+      ],
+      "hit_at_1": 1,
+      "hit_at_3": 1,
+      "reciprocal_rank": 1.0,
+      "abstained": 0,
+      "median_ms": 1.661400000557478
+    },
+    {
+      "id": "D08",
+      "split": "development",
+      "question": "Hộp thư đầy không nhận email mới.",
+      "relevant_ids": [
+        8
+      ],
+      "kind": "direct",
+      "method": "bm25",
+      "retrieved_ids": [
+        8,
+        9,
+        19
+      ],
+      "hit_at_1": 1,
+      "hit_at_3": 1,
+      "reciprocal_rank": 1.0,
+      "abstained": 0,
+      "median_ms": 1.4873000000079628
+    },
+    {
+      "id": "E08",
+      "split": "evaluation",
+      "question": "Outlook báo mailbox quota exceeded, đối tác gửi thư bị trả lại.",
+      "relevant_ids": [
+        8
+      ],
+      "kind": "paraphrase",
+      "method": "bm25",
+      "retrieved_ids": [
+        4,
+        8,
+        2
+      ],
+      "hit_at_1": 0,
+      "hit_at_3": 1,
+      "reciprocal_rank": 0.5,
+      "abstained": 0,
+      "median_ms": 1.4384000005520647
+    },
+    {
+      "id": "D09",
+      "split": "development",
+      "question": "Email lạ yêu cầu nhập mật khẩu.",
+      "relevant_ids": [
+        9
+      ],
+      "kind": "direct",
+      "method": "bm25",
+      "retrieved_ids": [
+        9,
+        6,
+        15
+      ],
+      "hit_at_1": 1,
+      "hit_at_3": 1,
+      "reciprocal_rank": 1.0,
+      "abstained": 0,
+      "median_ms": 1.4418999999179505
+    },
+    {
+      "id": "E09",
+      "split": "evaluation",
+      "question": "Có thư giả danh giám đốc bắt bấm link xác minh tài khoản, tôi nên làm gì?",
+      "relevant_ids": [
+        9
+      ],
+      "kind": "paraphrase",
+      "method": "bm25",
+      "retrieved_ids": [
+        6,
+        9,
+        16
+      ],
+      "hit_at_1": 0,
+      "hit_at_3": 1,
+      "reciprocal_rank": 0.5,
+      "abstained": 0,
+      "median_ms": 1.8735000003289315
+    },
+    {
+      "id": "D10",
+      "split": "development",
+      "question": "Không nghe được âm thanh cuộc họp và micro không hoạt động.",
+      "relevant_ids": [
+        10
+      ],
+      "kind": "direct",
+      "method": "bm25",
+      "retrieved_ids": [
+        10,
+        11,
+        1
+      ],
+      "hit_at_1": 1,
+      "hit_at_3": 1,
+      "reciprocal_rank": 1.0,
+      "abstained": 0,
+      "median_ms": 1.3843999995515333
+    },
+    {
+      "id": "E10",
+      "split": "evaluation",
+      "question": "Đồng nghiệp không nghe tiếng tôi khi họp Teams dù tai nghe đã cắm.",
+      "relevant_ids": [
+        10
+      ],
+      "kind": "paraphrase",
+      "method": "bm25",
+      "retrieved_ids": [
+        10,
+        16,
+        20
+      ],
+      "hit_at_1": 1,
+      "hit_at_3": 1,
+      "reciprocal_rank": 1.0,
+      "abstained": 0,
+      "median_ms": 1.3611000003947993
+    },
+    {
+      "id": "D11",
+      "split": "development",
+      "question": "Camera không hiển thị trong cuộc họp.",
+      "relevant_ids": [
+        11
+      ],
+      "kind": "direct",
+      "method": "bm25",
+      "retrieved_ids": [
+        11,
+        10,
+        8
+      ],
+      "hit_at_1": 1,
+      "hit_at_3": 1,
+      "reciprocal_rank": 1.0,
+      "abstained": 0,
+      "median_ms": 1.4735000004293397
+    },
+    {
+      "id": "E11",
+      "split": "evaluation",
+      "question": "Webcam chỉ hiện màn hình đen khi tôi bật video trong Teams.",
+      "relevant_ids": [
+        11
+      ],
+      "kind": "paraphrase",
+      "method": "bm25",
+      "retrieved_ids": [
+        19,
+        11,
+        5
+      ],
+      "hit_at_1": 0,
+      "hit_at_3": 1,
+      "reciprocal_rank": 0.5,
+      "abstained": 0,
+      "median_ms": 1.3896999998905812
+    },
+    {
+      "id": "D12",
+      "split": "development",
+      "question": "Máy tính chạy chậm khi mở nhiều ứng dụng.",
+      "relevant_ids": [
+        12
+      ],
+      "kind": "direct",
+      "method": "bm25",
+      "retrieved_ids": [
+        12,
+        5,
+        18
+      ],
+      "hit_at_1": 1,
+      "hit_at_3": 1,
+      "reciprocal_rank": 1.0,
+      "abstained": 0,
+      "median_ms": 1.4186999997036764
+    },
+    {
+      "id": "E12",
+      "split": "evaluation",
+      "question": "Laptop phản hồi rất lâu, RAM và CPU thường xuyên lên cao.",
+      "relevant_ids": [
+        12
+      ],
+      "kind": "paraphrase",
+      "method": "bm25",
+      "retrieved_ids": [
+        12,
+        20,
+        15
+      ],
+      "hit_at_1": 1,
+      "hit_at_3": 1,
+      "reciprocal_rank": 1.0,
+      "abstained": 0,
+      "median_ms": 1.4343000002554618
+    },
+    {
+      "id": "D13",
+      "split": "development",
+      "question": "Ổ đĩa đầy, không đủ chỗ lưu tệp.",
+      "relevant_ids": [
+        13
+      ],
+      "kind": "direct",
+      "method": "bm25",
+      "retrieved_ids": [
+        13,
+        8,
+        17
+      ],
+      "hit_at_1": 1,
+      "hit_at_3": 1,
+      "reciprocal_rank": 1.0,
+      "abstained": 0,
+      "median_ms": 1.4102000004641013
+    },
+    {
+      "id": "E13",
+      "split": "evaluation",
+      "question": "Windows báo low disk space trên ổ C, tôi cần giải phóng bộ nhớ lưu trữ.",
+      "relevant_ids": [
+        13
+      ],
+      "kind": "paraphrase",
+      "method": "bm25",
+      "retrieved_ids": [
+        12,
+        14,
+        8
+      ],
+      "hit_at_1": 0,
+      "hit_at_3": 0,
+      "reciprocal_rank": 0,
+      "abstained": 0,
+      "median_ms": 1.424600000063947
+    },
+    {
+      "id": "D14",
+      "split": "development",
+      "question": "Cập nhật Windows thất bại.",
+      "relevant_ids": [
+        14
+      ],
+      "kind": "direct",
+      "method": "bm25",
+      "retrieved_ids": [
+        14,
+        20,
+        16
+      ],
+      "hit_at_1": 1,
+      "hit_at_3": 1,
+      "reciprocal_rank": 1.0,
+      "abstained": 0,
+      "median_ms": 1.462100000026112
+    },
+    {
+      "id": "E14",
+      "split": "evaluation",
+      "question": "Windows Update liên tục báo cần restart sau bản vá và hiển thị mã lỗi.",
+      "relevant_ids": [
+        14
+      ],
+      "kind": "paraphrase",
+      "method": "bm25",
+      "retrieved_ids": [
+        14,
+        6,
+        3
+      ],
+      "hit_at_1": 1,
+      "hit_at_3": 1,
+      "reciprocal_rank": 1.0,
+      "abstained": 0,
+      "median_ms": 1.4268000004449277
+    },
+    {
+      "id": "D15",
+      "split": "development",
+      "question": "Tôi muốn cài phần mềm mới cho công việc.",
+      "relevant_ids": [
+        15
+      ],
+      "kind": "direct",
+      "method": "bm25",
+      "retrieved_ids": [
+        15,
+        17,
+        8
+      ],
+      "hit_at_1": 1,
+      "hit_at_3": 1,
+      "reciprocal_rank": 1.0,
+      "abstained": 0,
+      "median_ms": 1.4015000006111222
+    },
+    {
+      "id": "E15",
+      "split": "evaluation",
+      "question": "Ứng dụng cần quyền administrator để setup, tôi có nên tải bản crack không?",
+      "relevant_ids": [
+        15
+      ],
+      "kind": "paraphrase",
+      "method": "bm25",
+      "retrieved_ids": [
+        10,
+        11,
+        3
+      ],
+      "hit_at_1": 0,
+      "hit_at_3": 0,
+      "reciprocal_rank": 0,
+      "abstained": 0,
+      "median_ms": 1.430399999662768
+    },
+    {
+      "id": "D16",
+      "split": "development",
+      "question": "Không mở được thư mục chia sẻ.",
+      "relevant_ids": [
+        16
+      ],
+      "kind": "direct",
+      "method": "bm25",
+      "retrieved_ids": [
+        16,
+        3,
+        7
+      ],
+      "hit_at_1": 1,
+      "hit_at_3": 1,
+      "reciprocal_rank": 1.0,
+      "abstained": 0,
+      "median_ms": 1.490199999352626
+    },
+    {
+      "id": "E16",
+      "split": "evaluation",
+      "question": "Ổ mạng dùng chung báo Access denied dù đồng nghiệp vẫn vào được.",
+      "relevant_ids": [
+        16
+      ],
+      "kind": "paraphrase",
+      "method": "bm25",
+      "retrieved_ids": [
+        16,
+        13,
+        19
+      ],
+      "hit_at_1": 1,
+      "hit_at_3": 1,
+      "reciprocal_rank": 1.0,
+      "abstained": 0,
+      "median_ms": 1.4650000002802699
+    },
+    {
+      "id": "D17",
+      "split": "development",
+      "question": "Tôi xóa nhầm tệp, cần khôi phục.",
+      "relevant_ids": [
+        17
+      ],
+      "kind": "direct",
+      "method": "bm25",
+      "retrieved_ids": [
+        17,
+        8,
+        13
+      ],
+      "hit_at_1": 1,
+      "hit_at_3": 1,
+      "reciprocal_rank": 1.0,
+      "abstained": 0,
+      "median_ms": 1.4747000004717847
+    },
+    {
+      "id": "E17",
+      "split": "evaluation",
+      "question": "Lỡ xóa báo cáo hôm qua, có thể lấy lại từ bản sao lưu không?",
+      "relevant_ids": [
+        17
+      ],
+      "kind": "paraphrase",
+      "method": "bm25",
+      "retrieved_ids": [
+        13,
+        3,
+        12
+      ],
+      "hit_at_1": 0,
+      "hit_at_3": 0,
+      "reciprocal_rank": 0,
+      "abstained": 0,
+      "median_ms": 1.4177000002746354
+    },
+    {
+      "id": "D18",
+      "split": "development",
+      "question": "Excel không mở được tệp và báo Protected View.",
+      "relevant_ids": [
+        18
+      ],
+      "kind": "direct",
+      "method": "bm25",
+      "retrieved_ids": [
+        18,
+        13,
+        9
+      ],
+      "hit_at_1": 1,
+      "hit_at_3": 1,
+      "reciprocal_rank": 1.0,
+      "abstained": 0,
+      "median_ms": 1.7763000005288632
+    },
+    {
+      "id": "E18",
+      "split": "evaluation",
+      "question": "Bảng tính nhận qua email yêu cầu Enable Content, tôi có nên bật macro không?",
+      "relevant_ids": [
+        18
+      ],
+      "kind": "paraphrase",
+      "method": "bm25",
+      "retrieved_ids": [
+        9,
+        18,
+        15
+      ],
+      "hit_at_1": 0,
+      "hit_at_3": 1,
+      "reciprocal_rank": 0.5,
+      "abstained": 0,
+      "median_ms": 1.512199999524455
+    },
+    {
+      "id": "D19",
+      "split": "development",
+      "question": "Màn hình ngoài không nhận tín hiệu.",
+      "relevant_ids": [
+        19
+      ],
+      "kind": "direct",
+      "method": "bm25",
+      "retrieved_ids": [
+        19,
+        5,
+        18
+      ],
+      "hit_at_1": 1,
+      "hit_at_3": 1,
+      "reciprocal_rank": 1.0,
+      "abstained": 0,
+      "median_ms": 1.5499999999519787
+    },
+    {
+      "id": "E19",
+      "split": "evaluation",
+      "question": "Cắm HDMI vào máy chiếu nhưng vẫn báo No signal.",
+      "relevant_ids": [
+        19
+      ],
+      "kind": "paraphrase",
+      "method": "bm25",
+      "retrieved_ids": [
+        19,
+        20,
+        5
+      ],
+      "hit_at_1": 1,
+      "hit_at_3": 1,
+      "reciprocal_rank": 1.0,
+      "abstained": 0,
+      "median_ms": 1.4113000006545917
+    },
+    {
+      "id": "D20",
+      "split": "development",
+      "question": "Máy tính không nhận thiết bị USB.",
+      "relevant_ids": [
+        20
+      ],
+      "kind": "direct",
+      "method": "bm25",
+      "retrieved_ids": [
+        20,
+        19,
+        12
+      ],
+      "hit_at_1": 1,
+      "hit_at_3": 1,
+      "reciprocal_rank": 1.0,
+      "abstained": 0,
+      "median_ms": 1.3702000005650916
+    },
+    {
+      "id": "E20",
+      "split": "evaluation",
+      "question": "Cắm ổ flash thì báo USB device not recognized, có nên format luôn không?",
+      "relevant_ids": [
+        20
+      ],
+      "kind": "paraphrase",
+      "method": "bm25",
+      "retrieved_ids": [
+        20,
+        18,
+        2
+      ],
+      "hit_at_1": 1,
+      "hit_at_3": 1,
+      "reciprocal_rank": 1.0,
+      "abstained": 0,
+      "median_ms": 1.446100000066508
+    },
+    {
+      "id": "N01",
+      "split": "evaluation",
+      "question": "Nấu phở bò như thế nào?",
+      "relevant_ids": [],
+      "kind": "out_of_scope",
+      "method": "bm25",
+      "retrieved_ids": [
+        3,
+        5,
+        16
+      ],
+      "hit_at_1": null,
+      "hit_at_3": null,
+      "reciprocal_rank": 0,
+      "abstained": 0,
+      "median_ms": 1.3601000000562635
+    },
+    {
+      "id": "N02",
+      "split": "evaluation",
+      "question": "Tôi bị đau bụng nên uống thuốc gì?",
+      "relevant_ids": [],
+      "kind": "out_of_scope",
+      "method": "bm25",
+      "retrieved_ids": [
+        19
+      ],
+      "hit_at_1": null,
+      "hit_at_3": null,
+      "reciprocal_rank": 0,
+      "abstained": 0,
+      "median_ms": 1.3768999997409992
+    },
+    {
+      "id": "N03",
+      "split": "evaluation",
+      "question": "Dự đoán kết quả bóng đá tối nay",
+      "relevant_ids": [],
+      "kind": "out_of_scope",
+      "method": "bm25",
+      "retrieved_ids": [
+        9,
+        18,
+        2
+      ],
+      "hit_at_1": null,
+      "hit_at_3": null,
+      "reciprocal_rank": 0,
+      "abstained": 0,
+      "median_ms": 1.870000000053551
+    },
+    {
+      "id": "N04",
+      "split": "evaluation",
+      "question": "Hướng dẫn đầu tư chứng khoán",
+      "relevant_ids": [],
+      "kind": "out_of_scope",
+      "method": "bm25",
+      "retrieved_ids": [
+        5,
+        16,
+        6
+      ],
+      "hit_at_1": null,
+      "hit_at_3": null,
+      "reciprocal_rank": 0,
+      "abstained": 0,
+      "median_ms": 1.4787000000069384
+    },
+    {
+      "id": "N05",
+      "split": "evaluation",
+      "question": "Cách xin nghỉ phép năm trong công ty",
+      "relevant_ids": [],
+      "kind": "out_of_scope",
+      "method": "bm25",
+      "retrieved_ids": [
+        2,
+        18,
+        17
+      ],
+      "hit_at_1": null,
+      "hit_at_3": null,
+      "reciprocal_rank": 0,
+      "abstained": 0,
+      "median_ms": 1.3287000001582783
+    },
+    {
+      "id": "N06",
+      "split": "evaluation",
+      "question": "Mật khẩu Wi-Fi cụ thể của phòng giám đốc là gì?",
+      "relevant_ids": [],
+      "kind": "out_of_scope",
+      "method": "bm25",
+      "retrieved_ids": [
+        1,
+        6,
+        9
+      ],
+      "hit_at_1": null,
+      "hit_at_3": null,
+      "reciprocal_rank": 0,
+      "abstained": 0,
+      "median_ms": 1.429699999789591
+    },
+    {
+      "id": "N07",
+      "split": "evaluation",
+      "question": "Số điện thoại riêng của trưởng phòng IT là bao nhiêu?",
+      "relevant_ids": [],
+      "kind": "out_of_scope",
+      "method": "bm25",
+      "retrieved_ids": [
+        7,
+        12,
+        20
+      ],
+      "hit_at_1": null,
+      "hit_at_3": null,
+      "reciprocal_rank": 0,
+      "abstained": 0,
+      "median_ms": 1.3926999999966938
+    },
+    {
+      "id": "N08",
+      "split": "evaluation",
+      "question": "Tài khoản ngân hàng của tôi bị khóa phải làm sao?",
+      "relevant_ids": [],
+      "kind": "out_of_scope",
+      "method": "bm25",
+      "retrieved_ids": [
+        6,
+        4,
+        3
+      ],
+      "hit_at_1": null,
+      "hit_at_3": null,
+      "reciprocal_rank": 0,
+      "abstained": 0,
+      "median_ms": 1.306000000113272
+    }
+  ]
+}

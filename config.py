@@ -19,10 +19,12 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     GROQ_API_KEY = os.environ.get("GROQ_API_KEY", "")
-    GROQ_MODEL = os.environ.get("GROQ_MODEL", "llama-3.3-70b-versatile")
+    GROQ_MODEL = os.environ.get("GROQ_MODEL", "openai/gpt-oss-20b")
     AI_REQUESTS_PER_HOUR = 20
     MAX_CONTENT_LENGTH = 128 * 1024
     SESSION_COOKIE_HTTPONLY = True
     SESSION_COOKIE_SAMESITE = "Lax"
     SESSION_COOKIE_SECURE = os.environ.get("COOKIE_SECURE", "false").lower() == "true"
     WTF_CSRF_TIME_LIMIT = 3600
+
+    AI_RETRIEVAL_METHOD = os.environ.get("AI_RETRIEVAL_METHOD", "bm25")

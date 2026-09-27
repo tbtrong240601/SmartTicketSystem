@@ -1,0 +1,97 @@
+﻿id,split,question,relevant_ids,kind,method,retrieved_ids,hit_at_1,hit_at_3,reciprocal_rank,abstained,median_ms
+D01,development,Không kết nối được Wi-Fi thì kiểm tra gì?,[1],direct,baseline,"[1, 3, 4]",1,1,1.0,0,1.1772999996537692
+E01,evaluation,Laptop không bắt được mạng không dây trong phòng họp.,[1],paraphrase,baseline,"[11, 10, 8]",0,0,0,0,1.153100000010454
+D02,development,Trình duyệt báo DNS khi mở website.,[2],direct,baseline,"[2, 18, 12]",1,1,1.0,0,1.2075000004188041
+E02,evaluation,Internet vẫn dùng được nhưng trang nội bộ báo không phân giải được tên miền.,[2],paraphrase,baseline,"[2, 18, 5]",1,1,1.0,0,1.1010000007445342
+D03,development,VPN không kết nối được.,[3],direct,baseline,"[3, 1, 4]",1,1,1.0,0,1.1800000002040179
+E03,evaluation,"Làm việc ở nhà, ứng dụng kết nối mạng riêng của công ty báo lỗi xác thực.",[3],paraphrase,baseline,"[3, 1, 7]",1,1,1.0,0,1.135200000135228
+D04,development,"Máy in không nhận lệnh, hàng đợi bị kẹt.",[4],direct,baseline,"[4, 5, 19]",1,1,1.0,0,1.1359000000084052
+E04,evaluation,"Bấm Print nhưng tài liệu nằm mãi trong danh sách chờ, giấy không ra.",[4],paraphrase,baseline,"[6, 10, 11]",0,0,0,0,1.185799999802839
+D05,development,Máy in báo kẹt giấy.,[5],direct,baseline,"[5, 4, 1]",1,1,1.0,0,1.183600000331353
+E05,evaluation,"Tờ giấy mắc bên trong thiết bị in, tôi có nên kéo mạnh không?",[5],paraphrase,baseline,"[5, 11, 10]",1,1,1.0,0,1.1529000003065448
+D06,development,"Tài khoản bị khóa, tôi quên mật khẩu.",[6],direct,baseline,"[6, 9, 15]",1,1,1.0,0,1.1109999995824182
+E06,evaluation,"Tôi không nhớ thông tin bí mật để vào tài khoản làm việc, cần khôi phục quyền truy cập.",[6],paraphrase,baseline,"[6, 17, 16]",1,1,1.0,0,1.2483999998949002
+D07,development,Không nhận được OTP để đăng nhập.,[7],direct,baseline,"[7, 9, 6]",1,1,1.0,0,1.1031000003640656
+E07,evaluation,Ứng dụng xác thực hai bước trên điện thoại không hiện mã để vào hệ thống.,[7],paraphrase,baseline,"[7, 12, 13]",1,1,1.0,0,1.113199999963399
+D08,development,Hộp thư đầy không nhận email mới.,[8],direct,baseline,"[8, 9, 16]",1,1,1.0,0,1.1994999995295075
+E08,evaluation,"Outlook báo mailbox quota exceeded, đối tác gửi thư bị trả lại.",[8],paraphrase,baseline,"[4, 2, 18]",0,0,0,0,1.1192000001756242
+D09,development,Email lạ yêu cầu nhập mật khẩu.,[9],direct,baseline,"[9, 6, 15]",1,1,1.0,0,1.1181999998370884
+E09,evaluation,"Có thư giả danh giám đốc bắt bấm link xác minh tài khoản, tôi nên làm gì?",[9],paraphrase,baseline,"[6, 16, 8]",0,0,0,0,1.1148000003231573
+D10,development,Không nghe được âm thanh cuộc họp và micro không hoạt động.,[10],direct,baseline,"[10, 11, 14]",1,1,1.0,0,1.1905999999726191
+E10,evaluation,Đồng nghiệp không nghe tiếng tôi khi họp Teams dù tai nghe đã cắm.,[10],paraphrase,baseline,"[10, 16, 14]",1,1,1.0,0,1.1469999999462743
+D11,development,Camera không hiển thị trong cuộc họp.,[11],direct,baseline,"[11, 10, 8]",1,1,1.0,0,1.0580999996818719
+E11,evaluation,Webcam chỉ hiện màn hình đen khi tôi bật video trong Teams.,[11],paraphrase,baseline,"[19, 11, 10]",0,1,0.5,0,1.2750000005326
+D12,development,Máy tính chạy chậm khi mở nhiều ứng dụng.,[12],direct,baseline,"[12, 18, 5]",1,1,1.0,0,1.1205999999219785
+E12,evaluation,"Laptop phản hồi rất lâu, RAM và CPU thường xuyên lên cao.",[12],paraphrase,baseline,"[15, 12, 20]",0,1,0.5,0,1.1304999998174026
+D13,development,"Ổ đĩa đầy, không đủ chỗ lưu tệp.",[13],direct,baseline,"[13, 18, 17]",1,1,1.0,0,1.1061999994126381
+E13,evaluation,"Windows báo low disk space trên ổ C, tôi cần giải phóng bộ nhớ lưu trữ.",[13],paraphrase,baseline,"[5, 18, 14]",0,0,0,0,1.1811999993369682
+D14,development,Cập nhật Windows thất bại.,[14],direct,baseline,"[14, 16, 9]",1,1,1.0,0,1.0462999998708256
+E14,evaluation,Windows Update liên tục báo cần restart sau bản vá và hiển thị mã lỗi.,[14],paraphrase,baseline,"[14, 2, 18]",1,1,1.0,0,1.0731999991548946
+D15,development,Tôi muốn cài phần mềm mới cho công việc.,[15],direct,baseline,"[15, 3, 17]",1,1,1.0,0,1.1331999994581565
+E15,evaluation,"Ứng dụng cần quyền administrator để setup, tôi có nên tải bản crack không?",[15],paraphrase,baseline,"[12, 13, 6]",0,0,0,0,1.0921000002781511
+D16,development,Không mở được thư mục chia sẻ.,[16],direct,baseline,"[16, 18, 8]",1,1,1.0,0,1.1397000007491442
+E16,evaluation,Ổ mạng dùng chung báo Access denied dù đồng nghiệp vẫn vào được.,[16],paraphrase,baseline,"[13, 16, 12]",0,1,0.5,0,1.1870999996972387
+D17,development,"Tôi xóa nhầm tệp, cần khôi phục.",[17],direct,baseline,"[17, 13, 18]",1,1,1.0,0,1.0473000002093613
+E17,evaluation,"Lỡ xóa báo cáo hôm qua, có thể lấy lại từ bản sao lưu không?",[17],paraphrase,baseline,"[13, 3, 2]",0,0,0,0,1.059000000168453
+D18,development,Excel không mở được tệp và báo Protected View.,[18],direct,baseline,"[18, 13, 5]",1,1,1.0,0,1.0832999996637227
+E18,evaluation,"Bảng tính nhận qua email yêu cầu Enable Content, tôi có nên bật macro không?",[18],paraphrase,baseline,"[9, 15, 8]",0,0,0,0,1.0830999999598134
+D19,development,Màn hình ngoài không nhận tín hiệu.,[19],direct,baseline,"[19, 20, 8]",1,1,1.0,0,1.101300000300398
+E19,evaluation,Cắm HDMI vào máy chiếu nhưng vẫn báo No signal.,[19],paraphrase,baseline,"[5, 19, 18]",0,1,0.5,0,1.216799999383511
+D20,development,Máy tính không nhận thiết bị USB.,[20],direct,baseline,"[20, 12, 4]",1,1,1.0,0,1.1291000000710483
+E20,evaluation,"Cắm ổ flash thì báo USB device not recognized, có nên format luôn không?",[20],paraphrase,baseline,"[20, 18, 5]",1,1,1.0,0,1.0658000001058099
+N01,evaluation,Nấu phở bò như thế nào?,[],out_of_scope,baseline,"[18, 16, 12]",,,0,0,1.119999999900756
+N02,evaluation,Tôi bị đau bụng nên uống thuốc gì?,[],out_of_scope,baseline,[19],,,0,0,1.1622000001807464
+N03,evaluation,Dự đoán kết quả bóng đá tối nay,[],out_of_scope,baseline,"[13, 5, 4]",,,0,0,1.21579999995447
+N04,evaluation,Hướng dẫn đầu tư chứng khoán,[],out_of_scope,baseline,"[6, 3, 16]",,,0,0,1.0925999995379243
+N05,evaluation,Cách xin nghỉ phép năm trong công ty,[],out_of_scope,baseline,"[15, 10, 11]",,,0,0,1.1856000000989297
+N06,evaluation,Mật khẩu Wi-Fi cụ thể của phòng giám đốc là gì?,[],out_of_scope,baseline,"[1, 9, 6]",,,0,0,1.0818999999173684
+N07,evaluation,Số điện thoại riêng của trưởng phòng IT là bao nhiêu?,[],out_of_scope,baseline,"[20, 18, 12]",,,0,0,1.1563999996724306
+N08,evaluation,Tài khoản ngân hàng của tôi bị khóa phải làm sao?,[],out_of_scope,baseline,"[6, 4, 3]",,,0,0,1.2425000004441245
+D01,development,Không kết nối được Wi-Fi thì kiểm tra gì?,[1],direct,bm25,"[1, 3, 19]",1,1,1.0,0,1.5913000006548828
+E01,evaluation,Laptop không bắt được mạng không dây trong phòng họp.,[1],paraphrase,bm25,"[8, 11, 1]",0,1,0.3333333333333333,0,1.4774000001125387
+D02,development,Trình duyệt báo DNS khi mở website.,[2],direct,bm25,"[2, 12, 13]",1,1,1.0,0,1.5261999997164821
+E02,evaluation,Internet vẫn dùng được nhưng trang nội bộ báo không phân giải được tên miền.,[2],paraphrase,bm25,"[2, 4, 5]",1,1,1.0,0,1.5088999998624786
+D03,development,VPN không kết nối được.,[3],direct,bm25,"[3, 16, 1]",1,1,1.0,0,1.3808000003336929
+E03,evaluation,"Làm việc ở nhà, ứng dụng kết nối mạng riêng của công ty báo lỗi xác thực.",[3],paraphrase,bm25,"[3, 1, 7]",1,1,1.0,0,1.4430000001084409
+D04,development,"Máy in không nhận lệnh, hàng đợi bị kẹt.",[4],direct,bm25,"[4, 5, 19]",1,1,1.0,0,1.4384000005520647
+E04,evaluation,"Bấm Print nhưng tài liệu nằm mãi trong danh sách chờ, giấy không ra.",[4],paraphrase,bm25,"[6, 5, 1]",0,0,0,0,1.412700000400946
+D05,development,Máy in báo kẹt giấy.,[5],direct,bm25,"[5, 4, 1]",1,1,1.0,0,1.3641999994433718
+E05,evaluation,"Tờ giấy mắc bên trong thiết bị in, tôi có nên kéo mạnh không?",[5],paraphrase,bm25,"[5, 4, 12]",1,1,1.0,0,1.446600000235776
+D06,development,"Tài khoản bị khóa, tôi quên mật khẩu.",[6],direct,bm25,"[6, 15, 9]",1,1,1.0,0,1.6557999997530715
+E06,evaluation,"Tôi không nhớ thông tin bí mật để vào tài khoản làm việc, cần khôi phục quyền truy cập.",[6],paraphrase,bm25,"[6, 16, 17]",1,1,1.0,0,1.8249000004288973
+D07,development,Không nhận được OTP để đăng nhập.,[7],direct,bm25,"[7, 6, 9]",1,1,1.0,0,1.705499999843596
+E07,evaluation,Ứng dụng xác thực hai bước trên điện thoại không hiện mã để vào hệ thống.,[7],paraphrase,bm25,"[7, 3, 11]",1,1,1.0,0,1.661400000557478
+D08,development,Hộp thư đầy không nhận email mới.,[8],direct,bm25,"[8, 9, 19]",1,1,1.0,0,1.4873000000079628
+E08,evaluation,"Outlook báo mailbox quota exceeded, đối tác gửi thư bị trả lại.",[8],paraphrase,bm25,"[4, 8, 2]",0,1,0.5,0,1.4384000005520647
+D09,development,Email lạ yêu cầu nhập mật khẩu.,[9],direct,bm25,"[9, 6, 15]",1,1,1.0,0,1.4418999999179505
+E09,evaluation,"Có thư giả danh giám đốc bắt bấm link xác minh tài khoản, tôi nên làm gì?",[9],paraphrase,bm25,"[6, 9, 16]",0,1,0.5,0,1.8735000003289315
+D10,development,Không nghe được âm thanh cuộc họp và micro không hoạt động.,[10],direct,bm25,"[10, 11, 1]",1,1,1.0,0,1.3843999995515333
+E10,evaluation,Đồng nghiệp không nghe tiếng tôi khi họp Teams dù tai nghe đã cắm.,[10],paraphrase,bm25,"[10, 16, 20]",1,1,1.0,0,1.3611000003947993
+D11,development,Camera không hiển thị trong cuộc họp.,[11],direct,bm25,"[11, 10, 8]",1,1,1.0,0,1.4735000004293397
+E11,evaluation,Webcam chỉ hiện màn hình đen khi tôi bật video trong Teams.,[11],paraphrase,bm25,"[19, 11, 5]",0,1,0.5,0,1.3896999998905812
+D12,development,Máy tính chạy chậm khi mở nhiều ứng dụng.,[12],direct,bm25,"[12, 5, 18]",1,1,1.0,0,1.4186999997036764
+E12,evaluation,"Laptop phản hồi rất lâu, RAM và CPU thường xuyên lên cao.",[12],paraphrase,bm25,"[12, 20, 15]",1,1,1.0,0,1.4343000002554618
+D13,development,"Ổ đĩa đầy, không đủ chỗ lưu tệp.",[13],direct,bm25,"[13, 8, 17]",1,1,1.0,0,1.4102000004641013
+E13,evaluation,"Windows báo low disk space trên ổ C, tôi cần giải phóng bộ nhớ lưu trữ.",[13],paraphrase,bm25,"[12, 14, 8]",0,0,0,0,1.424600000063947
+D14,development,Cập nhật Windows thất bại.,[14],direct,bm25,"[14, 20, 16]",1,1,1.0,0,1.462100000026112
+E14,evaluation,Windows Update liên tục báo cần restart sau bản vá và hiển thị mã lỗi.,[14],paraphrase,bm25,"[14, 6, 3]",1,1,1.0,0,1.4268000004449277
+D15,development,Tôi muốn cài phần mềm mới cho công việc.,[15],direct,bm25,"[15, 17, 8]",1,1,1.0,0,1.4015000006111222
+E15,evaluation,"Ứng dụng cần quyền administrator để setup, tôi có nên tải bản crack không?",[15],paraphrase,bm25,"[10, 11, 3]",0,0,0,0,1.430399999662768
+D16,development,Không mở được thư mục chia sẻ.,[16],direct,bm25,"[16, 3, 7]",1,1,1.0,0,1.490199999352626
+E16,evaluation,Ổ mạng dùng chung báo Access denied dù đồng nghiệp vẫn vào được.,[16],paraphrase,bm25,"[16, 13, 19]",1,1,1.0,0,1.4650000002802699
+D17,development,"Tôi xóa nhầm tệp, cần khôi phục.",[17],direct,bm25,"[17, 8, 13]",1,1,1.0,0,1.4747000004717847
+E17,evaluation,"Lỡ xóa báo cáo hôm qua, có thể lấy lại từ bản sao lưu không?",[17],paraphrase,bm25,"[13, 3, 12]",0,0,0,0,1.4177000002746354
+D18,development,Excel không mở được tệp và báo Protected View.,[18],direct,bm25,"[18, 13, 9]",1,1,1.0,0,1.7763000005288632
+E18,evaluation,"Bảng tính nhận qua email yêu cầu Enable Content, tôi có nên bật macro không?",[18],paraphrase,bm25,"[9, 18, 15]",0,1,0.5,0,1.512199999524455
+D19,development,Màn hình ngoài không nhận tín hiệu.,[19],direct,bm25,"[19, 5, 18]",1,1,1.0,0,1.5499999999519787
+E19,evaluation,Cắm HDMI vào máy chiếu nhưng vẫn báo No signal.,[19],paraphrase,bm25,"[19, 20, 5]",1,1,1.0,0,1.4113000006545917
+D20,development,Máy tính không nhận thiết bị USB.,[20],direct,bm25,"[20, 19, 12]",1,1,1.0,0,1.3702000005650916
+E20,evaluation,"Cắm ổ flash thì báo USB device not recognized, có nên format luôn không?",[20],paraphrase,bm25,"[20, 18, 2]",1,1,1.0,0,1.446100000066508
+N01,evaluation,Nấu phở bò như thế nào?,[],out_of_scope,bm25,"[3, 5, 16]",,,0,0,1.3601000000562635
+N02,evaluation,Tôi bị đau bụng nên uống thuốc gì?,[],out_of_scope,bm25,[19],,,0,0,1.3768999997409992
+N03,evaluation,Dự đoán kết quả bóng đá tối nay,[],out_of_scope,bm25,"[9, 18, 2]",,,0,0,1.870000000053551
+N04,evaluation,Hướng dẫn đầu tư chứng khoán,[],out_of_scope,bm25,"[5, 16, 6]",,,0,0,1.4787000000069384
+N05,evaluation,Cách xin nghỉ phép năm trong công ty,[],out_of_scope,bm25,"[2, 18, 17]",,,0,0,1.3287000001582783
+N06,evaluation,Mật khẩu Wi-Fi cụ thể của phòng giám đốc là gì?,[],out_of_scope,bm25,"[1, 6, 9]",,,0,0,1.429699999789591
+N07,evaluation,Số điện thoại riêng của trưởng phòng IT là bao nhiêu?,[],out_of_scope,bm25,"[7, 12, 20]",,,0,0,1.3926999999966938
+N08,evaluation,Tài khoản ngân hàng của tôi bị khóa phải làm sao?,[],out_of_scope,bm25,"[6, 4, 3]",,,0,0,1.306000000113272
