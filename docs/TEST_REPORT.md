@@ -1,5 +1,19 @@
 # Biên bản kiểm thử và bàn giao
 
+## Cập nhật bản chốt ngày 28/09/2026
+
+- Bản ứng dụng nền: commit `3e87cfa`; các sửa đổi chốt tiếp theo cập nhật tài liệu.
+- Chạy lại ngày 28/09/2026: **32 test đạt**, gồm migration, phân quyền, Ticket, KB, Groq giả lập và truy xuất BM25. Không chạy các test này trên database thật. `pip check` không phát hiện dependencies hỏng ở môi trường kiểm thử và môi trường D:\SmartTicketSystem.
+- Đã thử kết nối Groq thành công sau khi sửa model và chứng chỉ; người dùng cũng xác nhận đã khắc phục. Chưa có chấm điểm thủ công chất lượng câu trả lời.
+- Bộ đánh giá mô phỏng: 20 bài, 48 câu hỏi. Trên 20 câu diễn đạt lại, baseline đạt Hit@3 12/20; BM25 16/20. Cả hai chưa từ chối nguồn ở 8/8 câu ngoài phạm vi/thiếu thông tin. Chi tiết và dữ liệu ở `evaluation/`.
+- Bộ đánh giá không sửa dữ liệu thật. Bản cập nhật BM25 không thêm migration, revision vẫn là `000000000003`.
+- Ngày 28/09 chưa kết nối được MySQL local ở cổng 3306; không chạy lại kiểm tra trên dữ liệu thật trong đợt này.
+- Kiểm tra giao diện trực quan và một lượt demo đủ ba vai trò vẫn cần thực hiện trên máy trình bày.
+
+## Biên bản lịch sử ngày 25/09/2026
+
+Phần dưới giữ nguyên kết quả tại thời điểm đó; thông tin chưa có API key và 27 test không đại diện cho bản hiện tại.
+
 Ngày thực hiện: 25/09/2026. Phạm vi: phiên bản local SmartTicket System.
 
 ## Môi trường
