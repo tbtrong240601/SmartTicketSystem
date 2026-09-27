@@ -64,7 +64,7 @@ Lệnh `create-admin` hỏi mật khẩu, không có tài khoản/mật khẩu m
 AI không đọc toàn bộ database, không gửi mật khẩu tài khoản, không gửi bình luận/nhật ký; nội dung Ticket chỉ xuất hiện khi người dùng chọn Ticket và nhìn thấy trong ô câu hỏi có thể sửa. Có che một số khóa/email nhưng đây không phải công cụ loại bỏ toàn bộ dữ liệu nhạy cảm. Chỉ gửi sau khi người dùng tích chọn. Phản hồi hiển thị dạng văn bản được escape; model không được cấp công cụ thực thi hay cập nhật Ticket. Tối đa 20 yêu cầu/giờ/người dùng; log chỉ lưu người dùng, Ticket liên quan, thời gian và chế độ, không lưu prompt/response.
 
 Tham khảo API chính thức: https://console.groq.com/docs/api-reference và https://console.groq.com/docs/models.
-**Chưa có API key khi bàn giao: đã test nhánh tích hợp bằng phản hồi giả lập, chưa xác nhận gọi Groq thật hoặc chất lượng câu trả lời của model.**
+**Đã kiểm tra kết nối Groq thực tế sau khi sửa cấu hình model và chứng chỉ HTTPS. Đây là kiểm tra khả năng kết nối, chưa phải đánh giá độ chính xác câu trả lời. Các nhánh lỗi được kiểm thử tự động bằng phản hồi giả lập.**
 
 ## Database và migration
 
@@ -100,3 +100,7 @@ Tài liệu báo cáo và kịch bản demo nằm trong `docs/`.
 ## Đánh giá phục vụ đồ án
 
 Chạy `python evaluation/run.py` để so sánh cách tìm kiếm cũ và BM25 trên dữ liệu mô phỏng. Xem [quy trình đánh giá](evaluation/README.md) và [kế hoạch hoàn thiện 3 ngày](docs/THESIS_READINESS.md). Không cần API key hoặc kết nối database.
+
+## Bản chốt báo cáo
+
+Xem [biên bản kiểm thử](docs/TEST_REPORT.md), [tài liệu nền](docs/REPORT_GUIDE.md) và [kịch bản demo](docs/DEMO_SCRIPT.md). Khi cập nhật máy đã có môi trường ảo, chạy `python -m pip install -r requirements-lock.txt` bằng Python của môi trường đó. Khởi động lại server sau khi cập nhật. Giữ nguyên `.env`; không thay bằng `.env.example`.
