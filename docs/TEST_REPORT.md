@@ -1,6 +1,18 @@
 # Biên bản kiểm thử và bàn giao
 
-## Cập nhật bản chốt ngày 28/09/2026
+## Kiểm tra MVP ngày 06/10/2026
+
+- Base: d28547d, branch feature/it-dashboard-redesign. Windows, Python 3.14.7.
+- `python -m unittest discover -s tests -v`: **37/37 đạt** (38.550 giây).
+- Migrations: DB trống, các revision cũ, timestamp tồn tại một phần, bảo toàn dữ liệu Ticket; nâng 000000000003 lên 000000000004 giữ lịch sử QA; schema khớp models.
+- Auth/role, disabled user, registration, CSRF/logout, login backoff, Admin screens/CRUD/CSV, KB draft/publish/search và tạo draft từ Ticket: đạt.
+- Workflow: tạo/nhận/chuyển, chặn người không phụ trách, resolve bắt buộc note, not_fixed trả về In Progress, fixed rồi close: đạt.
+- AI: QA cũ giữ nguyên; triage mock thành công lưu DB và hiển thị IT, User không được gọi/xem triage; consent, thiếu key, lỗi timeout, response sai risk/steps/schema, che secret: đạt.
+- Không gọi Groq thật; cần GROQ_API_KEY để kiểm tra live. Không có MySQL local trong checkout này; cần chạy migration trên bản sao dữ liệu thực trước demo.
+- Các test render template đạt; chưa kiểm tra trực quan bằng browser trong đợt này. Chạy kịch bản demo ba vai trò trên máy trình bày.
+- API tham khảo: https://console.groq.com/docs/structured-outputs (JSON schema best-effort và validation tại ứng dụng).
+
+## Cập nhật lịch sử ngày 28/09/2026
 
 - Bản ứng dụng nền: commit `3e87cfa`; các sửa đổi chốt tiếp theo cập nhật tài liệu.
 - Chạy lại ngày 28/09/2026: **32 test đạt**, gồm migration, phân quyền, Ticket, KB, Groq giả lập và truy xuất BM25. Không chạy các test này trên database thật. `pip check` không phát hiện dependencies hỏng ở môi trường kiểm thử và môi trường D:\SmartTicketSystem.

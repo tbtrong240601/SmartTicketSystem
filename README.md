@@ -10,14 +10,18 @@
 - **Knowledge Base:** tìm kiếm, lọc danh mục, bản nháp/xuất bản, tạo bản nháp từ phương án Ticket; chỉ bài đã xuất bản được dùng cho trợ lý.
 - **AI:** truy xuất 3 bài liên quan bằng BM25 trên từ khóa tiếng Việt bỏ dấu; gọi Groq khi có khóa và người dùng cho phép gửi câu hỏi. Không có khóa hoặc dịch vụ lỗi thì hiển thị tra cứu nội bộ có nhãn rõ ràng.
 
-## Chạy nhanh trên máy Windows hiện tại
+## Bản MVP ngày 06/10/2026
 
-1. Bật **MySQL** trong XAMPP. Database thực tế `smart_ticket_db` đã được nâng cấp đến revision `000000000003`.
-2. Mở `start.bat` trong thư mục dự án. Lần đầu cần Python và Internet để cài dependencies.
-3. Truy cập **http://127.0.0.1:5000**. Dừng bằng Ctrl+C trong cửa sổ máy chủ.
-4. Tài khoản hiện có được giữ nguyên. Tài khoản Admin mới được bàn giao trong file riêng `TAI_KHOAN_ADMIN_LOCAL.txt`, không nằm trong ZIP hoặc Git. Đổi mật khẩu sau khi đăng nhập.
+Đã kiểm tra trên checkout branch `feature/it-dashboard-redesign`, xuất phát từ `d28547d`.
+37 test tự động đạt trên Windows/Python 3.14.7 với SQLite tạm. Không có database
+MySQL thực tế hoặc API key trong checkout này; các kết quả lịch sử bên dưới không
+thay thế việc kiểm tra trên máy demo.
 
-`start.bat` dùng Waitress, không bật debug, chỉ lắng nghe localhost. `serve.py` kiểm tra revision trước khi chạy và không tự sửa database. Nếu chưa có `.env`, lần khởi động đầu tự tạo SECRET_KEY ngẫu nhiên cho local.
+IT/Admin mở chi tiết Ticket để phân tích bằng Groq: xác nhận gửi tiêu đề/mô tả,
+nhấn Phân tích, xem category, risk_level Low/Medium/High/Critical và 2–3 bước.
+Kết quả cùng model, người yêu cầu, thời gian, ticket và chế độ được lưu trong DB.
+AI không tự đổi danh mục hoặc trạng thái. Khi thiếu key/lỗi provider, có thông báo
+và vẫn xử lý thủ công. Chức năng hỏi đáp Knowledge Base tiếp tục hoạt động.
 
 ## Cài từ đầu hoặc trên máy khác
 
@@ -29,7 +33,13 @@ python -m venv .venv
 Copy-Item .env.example .env
 ```
 
-Đặt SECRET_KEY ngẫu nhiên và URI database trong `.env`. Tạo database MySQL trống trước nếu dùng MySQL. Hoặc dùng SQLite:
+Tạo SECRET_KEY bằng lệnh sau rồi đặt giá trị vào `.env`:
+
+```powershell
+.\.venv\Scripts\python.exe -c "import secrets; print(secrets.token_urlsafe(48))"
+```
+
+Đặt URI database trong `.env`. Không dùng giá trị placeholder của file mẫu. Tạo database MySQL trống trước nếu dùng MySQL. Hoặc dùng SQLite:
 
 ```powershell
 $env:SQLALCHEMY_DATABASE_URI = "sqlite:///smart_ticket_dev.db"
@@ -45,7 +55,7 @@ Lệnh `create-admin` hỏi mật khẩu, không có tài khoản/mật khẩu m
 
 | Biến | Ý nghĩa |
 |---|---|
-| SECRET_KEY | Khóa ký session, cần giá trị riêng khi triển khai |
+| SECRET_KEY | Khóa ký session ổn định giữa các lần chạy; nếu thiếu, dùng khóa ngẫu nhiên theo tiến trình, session sẽ hết hiệu lực khi restart |
 | SQLALCHEMY_DATABASE_URI | URI ưu tiên, ví dụ `mysql+pymysql://USER:PASSWORD@localhost/smart_ticket_db` |
 | DATABASE_URL | URI dự phòng nếu biến trên trống |
 | GROQ_API_KEY | Khóa Groq; để trống để chỉ tra cứu nội bộ |
@@ -61,10 +71,10 @@ Lệnh `create-admin` hỏi mật khẩu, không có tài khoản/mật khẩu m
 3. Mở Trợ lý AI, nhập câu hỏi, chọn cho phép gửi câu hỏi và nguồn đến Groq, rồi gửi.
 4. Kết quả ghi rõ **Groq** hoặc **tra cứu nội bộ**. Không có nguồn phù hợp thì không gọi model.
 
-AI không đọc toàn bộ database, không gửi mật khẩu tài khoản, không gửi bình luận/nhật ký; nội dung Ticket chỉ xuất hiện khi người dùng chọn Ticket và nhìn thấy trong ô câu hỏi có thể sửa. Có che một số khóa/email nhưng đây không phải công cụ loại bỏ toàn bộ dữ liệu nhạy cảm. Chỉ gửi sau khi người dùng tích chọn. Phản hồi hiển thị dạng văn bản được escape; model không được cấp công cụ thực thi hay cập nhật Ticket. Tối đa 20 yêu cầu/giờ/người dùng; log chỉ lưu người dùng, Ticket liên quan, thời gian và chế độ, không lưu prompt/response.
+AI không đọc toàn bộ database, không gửi mật khẩu tài khoản, không gửi bình luận/nhật ký; nội dung Ticket chỉ xuất hiện khi người dùng chọn Ticket và nhìn thấy trong ô câu hỏi có thể sửa. Có che một số khóa/email nhưng đây không phải công cụ loại bỏ toàn bộ dữ liệu nhạy cảm. Chỉ gửi sau khi người dùng tích chọn. Phản hồi hiển thị dạng văn bản được escape; model không được cấp công cụ thực thi hay cập nhật Ticket. Tối đa 20 yêu cầu/giờ/người dùng; DB lưu metadata và kết quả trả lời/phân tích để kiểm tra lại; không lưu bản sao prompt. Chỉ nhân viên IT/Admin thấy kết quả phân tích trên Ticket. Không đưa bí mật vào câu hỏi hoặc mô tả Ticket.
 
 Tham khảo API chính thức: https://console.groq.com/docs/api-reference và https://console.groq.com/docs/models.
-**Đã kiểm tra kết nối Groq thực tế sau khi sửa cấu hình model và chứng chỉ HTTPS. Đây là kiểm tra khả năng kết nối, chưa phải đánh giá độ chính xác câu trả lời. Các nhánh lỗi được kiểm thử tự động bằng phản hồi giả lập.**
+**Bằng chứng lịch sử từ bản trước: đã kiểm tra kết nối Groq thực tế sau khi sửa cấu hình model và chứng chỉ HTTPS. Đây là kiểm tra khả năng kết nối, chưa phải đánh giá độ chính xác câu trả lời. Các nhánh lỗi được kiểm thử tự động bằng phản hồi giả lập.**
 
 ## Database và migration
 
@@ -79,6 +89,7 @@ Sao lưu và thử trên bản sao trước khi nâng cấp database đang có d
 - `000000000001`: tạo baseline bị thiếu trước đây; các database đã có revision cũ không chạy lại baseline.
 - `000000000002`: thêm timestamp thiếu, giữ nguyên cột đã tồn tại. Revision này chỉ nâng cấp; muốn quay lại cần khôi phục backup.
 - `000000000003`: thêm trạng thái tài khoản, bài viết, nhật ký và metadata lượt hỏi AI. Không sửa Ticket cũ.
+- `000000000004` (head hiện tại): thêm purpose/result/model cho AIRequest; bản ghi cũ nhận purpose=qa, result/model để trống. Giữ Ticket và lịch sử cũ.
 
 Bản sao lưu bàn giao riêng là dữ liệu riêng tư; không đưa lên GitHub hoặc đính kèm báo cáo công khai.
 
@@ -89,7 +100,7 @@ Bản sao lưu bàn giao riêng là dữ liệu riêng tư; không đưa lên Gi
 .\.venv\Scripts\python.exe -m pip check
 ```
 
-Tests tự tạo SQLite tạm, không dùng database thật. Bao phủ migration, phân quyền, CRUD, workflow, CSRF, khóa đăng nhập, dữ liệu nhập sai, CSV, truy xuất KB và AI mock. Migration còn được kiểm tra trực tiếp trên MariaDB sạch và bản khôi phục dữ liệu thực tế; xem `docs/TEST_REPORT.md`.
+Tests tự tạo SQLite tạm, không dùng database thật. Bao phủ migration, phân quyền, CRUD, workflow, CSRF, khóa đăng nhập, dữ liệu nhập sai, CSV, truy xuất KB và AI mock. Bản trước từng kiểm tra migration trên MariaDB; migration 000000000004 hiện đã kiểm tra bằng SQLite và cần chạy trên bản sao MySQL trước demo; xem `docs/TEST_REPORT.md`.
 
 ## Phạm vi bàn giao
 
