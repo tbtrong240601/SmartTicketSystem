@@ -1,4 +1,5 @@
 import os
+import secrets
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -7,7 +8,7 @@ load_dotenv(Path(__file__).parent / ".env")
 
 class Config:
     # Development fallback only; set SECRET_KEY in deployed environments.
-    SECRET_KEY = os.environ.get("SECRET_KEY") or "smart-ticket-dev-only-key"
+    SECRET_KEY = os.environ.get("SECRET_KEY") or secrets.token_urlsafe(48)
 
     # Preserve the existing local MySQL setup when no override is provided.
     SQLALCHEMY_DATABASE_URI = (

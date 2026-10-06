@@ -150,4 +150,8 @@ class AIRequest(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     ticket_id = db.Column(db.Integer, db.ForeignKey("tickets.id"), nullable=True)
     mode = db.Column(db.String(30), nullable=False)
+    purpose = db.Column(db.String(30), nullable=False, default="qa", server_default="qa")
+    result = db.Column(db.JSON, nullable=True)
+    model = db.Column(db.String(100), nullable=True)
+    ticket = db.relationship("Ticket", backref=db.backref("ai_requests", order_by="AIRequest.id"))
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow, index=True)

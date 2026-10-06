@@ -20,7 +20,7 @@ with app.app_context():
         revision = db.session.execute(text("SELECT version_num FROM alembic_version")).scalar()
     except Exception:
         raise SystemExit("Database not ready. Start MySQL and run: python -m flask --app run db upgrade") from None
-    if revision != "000000000003":
+    if revision != "000000000004":
         raise SystemExit("Database migration required: python -m flask --app run db upgrade")
     db.session.remove()
 
