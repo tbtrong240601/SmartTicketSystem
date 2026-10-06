@@ -155,6 +155,19 @@ class MigrationTests(unittest.TestCase):
         self.migrate()
         self.assertEqual(Ticket.query.count(), 1)
 
+    def test_upgrade_ai_metadata_preserves_qa_history(self):
+        self.migrate("000000000003")
+        with db.engine.begin() as connection:
+            connection.execute(sa.text("INSERT INTO users (id, username, password_hash, role) VALUES (1, 'legacy', 'hash', 'User')"))
+            connection.execute(sa.text("INSERT INTO ai_requests (user_id, mode, created_at) VALUES (1, 'knowledge', '2026-09-01 10:00:00')"))
+        self.migrate()
+        self.assert_schema_matches_models()
+        from app.models import AIRequest
+        entry = AIRequest.query.one()
+        self.assertEqual(entry.purpose, "qa")
+        self.assertEqual(entry.mode, "knowledge")
+        self.assertIsNone(entry.result)
+
     def test_upgrade_early_revision_with_data(self):
         self.migrate("650b210f5706")
         with db.engine.begin() as connection:

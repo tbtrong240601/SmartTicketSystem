@@ -76,6 +76,67 @@ class FeatureTests(unittest.TestCase):
         self.assertEqual(self.client.get(f"/ai/?ticket_id={self.ticket.id}").status_code, 403)
         self.assertEqual(self.client.post(f"/tickets/{self.ticket.id}/comments", data={"content":"test"}).status_code, 403)
 
+    def test_triage_roles_consent_missing_key(self):
+        url = f"/ai/tickets/{self.ticket.id}/analyze"
+        self.login("owner")
+        self.assertEqual(self.client.post(url, data={"external":"on"}).status_code, 403)
+        self.login("support")
+        self.assertEqual(self.client.post(url).status_code, 400)
+        with patch("app.services.triage.requests.post") as provider:
+            self.assertEqual(self.client.post(url, data={"external":"on"}).status_code, 302)
+            provider.assert_not_called()
+        self.assertEqual(AIRequest.query.one().mode, "unavailable")
+
+    def test_triage_success_saved_and_visible_only_to_staff(self):
+        import json
+        self.app.config["GROQ_API_KEY"] = "test-key"
+        self.login("support")
+        self.ticket.description = "password=secret-value Wi-Fi failure"
+        db.session.commit()
+        response = Mock()
+        payload = {"category":"Network", "risk_level":"High", "suggested_steps":["Check connection", "Contact IT"]}
+        response.json.return_value = {"choices":[{"message":{"content":json.dumps(payload)}}]}
+        with patch("app.services.triage.requests.post", return_value=response) as provider:
+            self.client.post(f"/ai/tickets/{self.ticket.id}/analyze", data={"external":"on"})
+            self.assertNotIn("secret-value", str(provider.call_args.kwargs["json"]))
+        entry = AIRequest.query.one()
+        self.assertEqual(entry.result["analysis"], payload)
+        self.assertEqual(entry.model, self.app.config["GROQ_MODEL"])
+        self.assertEqual(self.ticket.status, "Open")
+        self.assertEqual(self.ticket.category_id, self.category.id)
+        self.assertIn("Check connection", self.client.get(f"/tickets/{self.ticket.id}").get_data(as_text=True))
+        self.login("owner")
+        self.assertNotIn("Check connection", self.client.get(f"/tickets/{self.ticket.id}").get_data(as_text=True))
+
+    def test_triage_malformed_and_timeout(self):
+        import json
+        from app.services.triage import analyze
+        self.app.config["GROQ_API_KEY"] = "test-key"
+        for payload in ({}, {"category":"Network", "risk_level":"Urgent", "suggested_steps":["a", "b"]},
+                {"category":"Network", "risk_level":"Low", "suggested_steps":["a"]}):
+            response = Mock()
+            response.json.return_value = {"choices":[{"message":{"content":json.dumps(payload)}}]}
+            with patch("app.services.triage.requests.post", return_value=response):
+                self.assertEqual(analyze(self.ticket, [self.category])["mode"], "fallback")
+        with patch("app.services.triage.requests.post", side_effect=requests.Timeout):
+            self.assertEqual(analyze(self.ticket, [self.category])["mode"], "fallback")
+
+    def test_transfer_then_fixed_and_close(self):
+        self.login("support")
+        self.client.post(f"/tickets/{self.ticket.id}/accept")
+        self.client.post(f"/tickets/{self.ticket.id}/transfer", data={"assigned_to_id":self.people["admin"].id})
+        self.assertEqual(self.ticket.assigned_to_id, self.people["admin"].id)
+        self.client.post(f"/tickets/{self.ticket.id}/resolve", data={"resolution_note":"Unauthorized"})
+        self.assertEqual(self.ticket.status, "In Progress")
+        self.login("admin")
+        self.client.post(f"/tickets/{self.ticket.id}/resolve", data={"resolution_note":"Fixed"})
+        self.login("owner")
+        self.client.post(f"/tickets/{self.ticket.id}/confirm-resolution", data={"confirmation":"fixed"})
+        self.login("admin")
+        self.client.post(f"/tickets/{self.ticket.id}/status", data={"status":"Closed"})
+        self.assertEqual(self.ticket.status, "Closed")
+        self.assertIsNotNone(self.ticket.closed_at)
+
     def test_category_crud_and_references(self):
         self.login("admin")
         self.client.post("/admin/categories", data={"name":"Hardware", "description":"Devices"})
